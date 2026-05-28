@@ -275,7 +275,7 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
             
             {/* Notification Bell */}
-            <div className="relative">
+            <div className="relative" onMouseLeave={() => setShowNotifications(false)}>
               <button
                 onClick={() => {
                   setShowNotifications(!showNotifications);
@@ -295,16 +295,16 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
                     <h3 className="font-bold text-gray-900">Notifications</h3>
                   </div>
                   <div className="divide-y divide-gray-100 max-h-80 overflow-y-auto">
-                    <div className="p-4 hover:bg-gray-50 transition cursor-pointer">
+                    <Link href="/products?category=seeds" onClick={() => setShowNotifications(false)} className="block p-4 hover:bg-gray-50 transition cursor-pointer">
                       <p className="text-sm font-bold text-gray-900 mb-1">Mega Seed Sale!</p>
                       <p className="text-xs text-gray-600">Get up to 40% off on all premium hybrid seeds this week.</p>
                       <p className="text-[10px] text-gray-400 mt-2">2 hours ago</p>
-                    </div>
-                    <div className="p-4 hover:bg-gray-50 transition cursor-pointer">
+                    </Link>
+                    <Link href="/profile/orders" onClick={() => setShowNotifications(false)} className="block p-4 hover:bg-gray-50 transition cursor-pointer">
                       <p className="text-sm font-bold text-gray-900 mb-1">Order #8921 Shipped</p>
                       <p className="text-xs text-gray-600">Your fertilizers are on the way and will reach you tomorrow.</p>
                       <p className="text-[10px] text-gray-400 mt-2">1 day ago</p>
-                    </div>
+                    </Link>
                   </div>
                 </div>
               )}
