@@ -57,6 +57,7 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
   // UI Dropdowns
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(2);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -280,13 +281,18 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
                 onClick={() => {
                   setShowNotifications(!showNotifications);
                   setShowProfileMenu(false);
+                  if (!showNotifications) {
+                    setUnreadCount(0);
+                  }
                 }}
                 className="relative rounded-full p-2.5 text-gray-600 transition hover:bg-gray-100 hover:text-emerald-600"
               >
                 <Bell size={22} />
-                <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-white">
-                  2
-                </span>
+                {unreadCount > 0 && (
+                  <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-white">
+                    {unreadCount}
+                  </span>
+                )}
               </button>
               
               {showNotifications && (
