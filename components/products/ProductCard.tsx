@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Product } from '@/lib/types'
-import { useCartStore } from '@/lib/store'
+import { useCartStore, useWishlistStore } from '@/lib/store'
 import { Star, ShoppingCart, Heart } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
@@ -16,27 +16,12 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const { addItem } = useCartStore()
-  const [isFavorite, setIsFavorite] = useState(false)
-
-  useEffect(() => {
-    const saved = typeof window !== 'undefined' ? localStorage.getItem('cc_wishlist') : null
-    const wishlist = saved ? JSON.parse(saved) : []
-    setIsFavorite(wishlist.includes(product.id))
-  }, [product.id])
+  const { items: wishlistItems, toggleItem } = useWishlistStore()
+  const isFavorite = wishlistItems.includes(product.id)
 
   const toggleFavorite = () => {
-    const saved = typeof window !== 'undefined' ? localStorage.getItem('cc_wishlist') : null
-    const wishlist: string[] = saved ? JSON.parse(saved) : []
-    const updatedWishlist = wishlist.includes(product.id)
-      ? wishlist.filter((id) => id !== product.id)
-      : [...wishlist, product.id]
-
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('cc_wishlist', JSON.stringify(updatedWishlist))
-    }
-
-    setIsFavorite(!isFavorite)
-    toast.success(updatedWishlist.includes(product.id) ? 'Added to wishlist' : 'Removed from wishlist')
+    toggleItem(product.id)
+    toast.success(!isFavorite ? 'Added to wishlist' : 'Removed from wishlist')
   }
 
   const handleAddToCart = () => {

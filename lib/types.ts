@@ -40,6 +40,7 @@ export interface User {
   state: string
   pincode: string
   created_at: string
+  role?: 'user' | 'admin'
 }
 
 // Cart Item Type

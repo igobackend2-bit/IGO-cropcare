@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer'
 import { useCartStore, useAuthStore } from '@/lib/store'
 import { Product } from '@/lib/types'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase/client'
 import { Trash2, ArrowRight, ShoppingCart, MapPin, CreditCard, ChevronRight, X, Loader2, CheckCircle2 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
@@ -29,18 +30,30 @@ export default function CartPage() {
 
   useEffect(() => {
     const loadProducts = async () => {
+      if (!items || items.length === 0) {
+        setProductsList([])
+        setLoadingProducts(false)
+        return
+      }
+      
       try {
-        const response = await fetch('/api/products')
-        const data = await response.json()
-        setProductsList(Array.isArray(data) ? data : [])
+        const productIds = items.map(item => item.product_id)
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .in('id', productIds)
+          
+        if (error) throw error
+        setProductsList(data as Product[])
       } catch (err) {
-        console.error(err)
+        console.error('Failed to load cart products:', err)
+        toast.error('Failed to load some product details')
       } finally {
         setLoadingProducts(false)
       }
     }
     loadProducts()
-  }, [])
+  }, [items])
 
   const handleCheckoutStart = () => {
     if (!isLoggedIn) {

@@ -21,6 +21,12 @@ interface CartStore {
   getTotalPrice: () => number
 }
 
+interface WishlistStore {
+  items: string[] // Array of product IDs
+  toggleItem: (productId: string) => void
+  clearWishlist: () => void
+}
+
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set) => ({
@@ -68,6 +74,29 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: 'cc_cart_state',
+      partialize: (state) => ({ items: state.items }),
+      version: 1,
+    }
+  )
+)
+
+export const useWishlistStore = create<WishlistStore>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      toggleItem: (productId) => {
+        const state = get()
+        const isExisting = state.items.includes(productId)
+        if (isExisting) {
+          set({ items: state.items.filter(id => id !== productId) })
+        } else {
+          set({ items: [...state.items, productId] })
+        }
+      },
+      clearWishlist: () => set({ items: [] }),
+    }),
+    {
+      name: 'cc_wishlist_state',
       partialize: (state) => ({ items: state.items }),
       version: 1,
     }
