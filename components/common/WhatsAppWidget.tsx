@@ -23,7 +23,7 @@ const WhatsAppWidget: FC<WhatsAppWidgetProps> = ({
       {/* WhatsApp Floating Button */}
       <button
         onClick={handleWhatsAppClick}
-        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition transform hover:scale-110 z-40 animate-pulse"
+        className="fixed bottom-6 right-24 md:bottom-8 md:right-28 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition transform hover:scale-110 z-40 animate-pulse"
         title="Chat with us on WhatsApp"
       >
         <MessageCircle size={28} />
