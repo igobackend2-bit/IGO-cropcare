@@ -420,9 +420,21 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
       {/* Mega Menu Bar */}
       <div className="hidden bg-white/80 backdrop-blur-xl border-b border-gray-200/50 lg:block relative z-40 shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-center gap-6 px-4">
-          <Link href="/products" className="flex items-center gap-1.5 py-3.5 text-sm font-black uppercase tracking-wider text-gray-900 transition hover:text-emerald-600">
-            <Menu size={16} /> All Categories
-          </Link>
+          <div className="relative group">
+            <Link href="/products" className="flex items-center gap-1.5 py-3.5 text-sm font-black uppercase tracking-wider text-gray-900 transition hover:text-emerald-600">
+              <Menu size={16} /> All Categories
+            </Link>
+            <div className="absolute left-0 top-full w-64 bg-white rounded-b-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+              {megaMenus.map((menu) => (
+                <Link key={menu.label} href={menu.href} className="block px-5 py-3.5 text-sm font-bold text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition border-b border-gray-50 last:border-0">
+                  {menu.label}
+                </Link>
+              ))}
+              <Link href="/products" className="block px-5 py-3.5 text-sm font-bold text-emerald-600 hover:bg-emerald-50 transition text-center bg-gray-50">
+                View All Products →
+              </Link>
+            </div>
+          </div>
           
           <div className="h-4 w-px bg-gray-200" />
 

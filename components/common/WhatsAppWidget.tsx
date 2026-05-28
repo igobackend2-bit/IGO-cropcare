@@ -29,24 +29,6 @@ const WhatsAppWidget: FC<WhatsAppWidgetProps> = ({
         <MessageCircle size={28} />
       </button>
 
-      {/* WhatsApp Banner (optional) */}
-      <div className="hidden lg:block fixed bottom-24 right-6 bg-white rounded-lg shadow-lg p-4 max-w-xs z-40">
-        <div className="flex items-start gap-3">
-          <MessageCircle className="text-green-500 flex-shrink-0 mt-1" size={20} />
-          <div>
-            <h4 className="font-bold text-gray-900 text-sm">Chat with us!</h4>
-            <p className="text-gray-600 text-xs mt-1">
-              Our experts are online. Get instant help with your farming queries.
-            </p>
-            <button
-              onClick={handleWhatsAppClick}
-              className="mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm font-semibold transition"
-            >
-              Open WhatsApp
-            </button>
-          </div>
-        </div>
-      </div>
     </>
   );
 };
