@@ -78,8 +78,13 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           </div>
         )}
         {product.stock === 0 && (
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center">
-            <span className="text-white font-bold text-lg tracking-wide">Out of Stock</span>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-10">
+            <span className="text-white font-bold text-lg tracking-wide uppercase">Unsold</span>
+          </div>
+        )}
+        {product.stock > 0 && product.stock < 10 && (
+          <div className="absolute bottom-3 left-3 bg-amber-500/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10 animate-pulse">
+            Low Stock
           </div>
         )}
       </div>

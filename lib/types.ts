@@ -21,6 +21,11 @@ export interface Product {
   isOrganic?: boolean
   tags?: string[]
   aiImagePrompt?: string
+  // Admin fields
+  is_active?: boolean
+  isDeleted?: boolean
+  isAdminAdded?: boolean
+  restoredAt?: string
 }
 
 // User Types
@@ -55,6 +60,10 @@ export interface Order {
   items: OrderItem[]
   created_at: string
   updated_at: string
+  // Customer snapshot
+  customer_name?: string
+  customer_email?: string
+  customer_phone?: string
 }
 
 export interface OrderItem {
@@ -75,4 +84,65 @@ export interface Review {
   comment: string
   created_at: string
   user?: User
+}
+
+// Banner Type (Admin-managed header announcements)
+export interface Banner {
+  id: string
+  text: string
+  link?: string
+  linkText?: string
+  bgColor: string
+  textColor: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+// Analytics / Page View Type
+export interface PageView {
+  id: string
+  sessionId: string
+  page: string
+  productId?: string
+  productName?: string
+  category?: string
+  timestamp: string
+  visitorName?: string
+  visitorEmail?: string
+  visitorPhone?: string
+}
+
+// Lead Type (CRM)
+export interface Lead {
+  id: string
+  name: string
+  email: string
+  phone?: string
+  intent_product_id?: string
+  created_at: string
+}
+
+// Page View Type (Analytics)
+export interface PageView {
+  id: string
+  path: string
+  product_id?: string
+  user_id?: string
+  created_at: string
+}
+
+// Admin Setting Type (Banners)
+export interface AdminSetting {
+  id: string
+  setting_key: string
+  setting_value: any
+  updated_at: string
+}
+
+// Admin Product Override (edits to existing products)
+export interface ProductOverride {
+  id: string        // matches original product ID
+  changes: Partial<Product>
+  updatedAt: string
 }

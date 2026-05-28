@@ -429,3 +429,76 @@ export const submitProductReview = async (
 
   return newReview
 }
+
+// -------------------------------------------------------------
+// ADMIN & CRM ACTIONS
+// -------------------------------------------------------------
+
+export const createProduct = async (productData: Partial<Product>): Promise<Product | null> => {
+  if (!isSupabaseConfigured()) return null;
+  try {
+    const { data, error } = await supabase.from('products').insert(productData).select().single()
+    if (error) throw error
+    return data as Product
+  } catch (err) {
+    console.error('Error creating product:', err)
+    return null
+  }
+}
+
+export const updateProduct = async (id: string, productData: Partial<Product>): Promise<Product | null> => {
+  if (!isSupabaseConfigured()) return null;
+  try {
+    const { data, error } = await supabase.from('products').update(productData).eq('id', id).select().single()
+    if (error) throw error
+    return data as Product
+  } catch (err) {
+    console.error('Error updating product:', err)
+    return null
+  }
+}
+
+export const captureLead = async (leadData: Partial<import('../types').Lead>): Promise<boolean> => {
+  if (!isSupabaseConfigured()) return false;
+  try {
+    const { error } = await supabase.from('leads').insert(leadData)
+    if (error) throw error
+    return true
+  } catch (err) {
+    console.error('Error capturing lead:', err)
+    return false
+  }
+}
+
+export const recordPageView = async (path: string, productId?: string, userId?: string): Promise<void> => {
+  if (!isSupabaseConfigured()) return;
+  try {
+    await supabase.from('page_views').insert({ path, product_id: productId, user_id: userId })
+  } catch (err) {
+    console.error('Error recording page view:', err)
+  }
+}
+
+export const getAdminSetting = async (key: string): Promise<any | null> => {
+  if (!isSupabaseConfigured()) return null;
+  try {
+    const { data, error } = await supabase.from('admin_settings').select('setting_value').eq('setting_key', key).single()
+    if (error) throw error
+    return data?.setting_value
+  } catch (err) {
+    console.error('Error getting admin setting:', err)
+    return null
+  }
+}
+
+export const setAdminSetting = async (key: string, value: any): Promise<boolean> => {
+  if (!isSupabaseConfigured()) return false;
+  try {
+    const { error } = await supabase.from('admin_settings').upsert({ setting_key: key, setting_value: value }, { onConflict: 'setting_key' })
+    if (error) throw error
+    return true
+  } catch (err) {
+    console.error('Error setting admin setting:', err)
+    return false
+  }
+}

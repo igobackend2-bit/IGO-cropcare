@@ -10,6 +10,8 @@ import { Star, ShoppingCart, Heart, Send, CheckCircle2, ChevronRight, AlertCircl
 import EnhancedHeader from '@/components/layout/EnhancedHeader'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
+import { recordPageView } from '@/lib/supabase/db'
+import LeadCaptureModal from '@/components/crm/LeadCaptureModal'
 
 interface ChemicalInfo {
   activeIngredient: string
@@ -111,6 +113,9 @@ export default function ProductDetailPage({ params }: PageProps) {
         if (!productRes.ok) throw new Error('Product fetch failed')
         const prod: Product = await productRes.json()
         setProduct(prod)
+        
+        // Track page view
+        recordPageView(`/products/${id}`, prod.id, user?.id)
 
         const reviewsRes = await fetch(`/api/reviews/${id}`)
         if (reviewsRes.ok) {
