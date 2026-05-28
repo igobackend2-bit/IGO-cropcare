@@ -12,6 +12,7 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null)
+  const [uploadingImage, setUploadingImage] = useState(false)
 
   // Fetch all products including soft deleted (is_active = false)
   const fetchProducts = async () => {
@@ -69,6 +70,31 @@ export default function AdminProductsPage() {
       fetchProducts()
     } catch (err: any) {
       toast.error(err.message || 'Error toggling status')
+    }
+  }
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!e.target.files || e.target.files.length === 0) return
+      setUploadingImage(true)
+      const file = e.target.files[0]
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`
+      const filePath = `product-images/${fileName}`
+
+      const { error: uploadError } = await supabase.storage.from('products').upload(filePath, file)
+
+      if (uploadError) {
+        throw uploadError
+      }
+
+      const { data } = supabase.storage.from('products').getPublicUrl(filePath)
+      setEditingProduct({ ...editingProduct, image_url: data.publicUrl })
+      toast.success('Image uploaded successfully!')
+    } catch (error: any) {
+      toast.error(error.message || 'Error uploading image. Make sure the "products" storage bucket exists and is public.')
+    } finally {
+      setUploadingImage(false)
     }
   }
 
@@ -179,7 +205,7 @@ export default function AdminProductsPage() {
       {/* Product Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+          <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="p-6 border-b border-slate-200 dark:border-slate-800">
               <h2 className="text-xl font-bold">{editingProduct?.id ? 'Edit Product' : 'Add New Product'}</h2>
             </div>
@@ -243,15 +269,35 @@ export default function AdminProductsPage() {
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium mb-1">Image URL</label>
-                  <input
-                    type="url"
-                    placeholder="https://..."
-                    value={editingProduct?.image_url || ''}
-                    onChange={(e) => setEditingProduct({ ...editingProduct, image_url: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 focus:ring-2 focus:ring-green-500 outline-none"
-                  />
-                  <p className="text-xs text-slate-500 mt-1">Paste an image link. To upload, use the Supabase Storage dashboard or a free image host for now.</p>
+                  <label className="block text-sm font-medium mb-1">Product Image</label>
+                  <div className="flex flex-col gap-3">
+                    {editingProduct?.image_url && (
+                      <div className="relative w-24 h-24 rounded-lg overflow-hidden border dark:border-slate-700">
+                        <Image src={editingProduct.image_url} alt="Preview" fill className="object-cover" />
+                      </div>
+                    )}
+                    <div className="flex items-center gap-4">
+                      <label className="cursor-pointer bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4" />
+                        {uploadingImage ? 'Uploading...' : 'Upload Image'}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleImageUpload}
+                          disabled={uploadingImage}
+                        />
+                      </label>
+                      <span className="text-slate-500 text-xs">OR</span>
+                      <input
+                        type="url"
+                        placeholder="Paste image URL here"
+                        value={editingProduct?.image_url || ''}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, image_url: e.target.value })}
+                        className="flex-1 px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 focus:ring-2 focus:ring-green-500 outline-none"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="col-span-2">
                   <label className="block text-sm font-medium mb-1">Description</label>
