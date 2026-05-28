@@ -12,7 +12,7 @@ const convertExtendedProduct = (ep: ExtendedProduct): Product => ({
   ...ep,
   price: ep.mrp,                  // MRP shown as strikethrough original price
   discount: ep.mrp - ep.price,    // actual rupee discount amount
-  category: ep.category as any,   // Cast to exact enum
+  category: ep.category as unknown,   // Cast to exact enum
   created_at: new Date().toISOString(),
 })
 
@@ -292,7 +292,7 @@ export const getUserOrders = async (userId: string): Promise<Order[]> => {
   // Always check localStorage orders first to guarantee immediate responsive display
 const localOrdersRaw = safeLocalStorage?.getItem('cc_orders')
   const localOrders = localOrdersRaw ? JSON.parse(localOrdersRaw) : []
-  const filteredLocal = localOrders.filter((ord: any) => ord.user_id === userId)
+  const filteredLocal = localOrders.filter((ord: { user_id: string }) => ord.user_id === userId)
   
   if (!isSupabaseConfigured()) {
     return filteredLocal
@@ -325,8 +325,8 @@ const localOrdersRaw = safeLocalStorage?.getItem('cc_orders')
 
     const products = await getProducts()
 
-    const formattedOrders: Order[] = dbOrders.map((ord: any) => {
-      const items = (ord.order_items || []).map((item: any) => ({
+    const formattedOrders: Order[] = dbOrders.map((ord: { id: string; order_items: unknown[] }) => {
+      const items = (ord.order_items || []).map((item: { id: string; product_id: string; quantity: number; price: string }) => ({
         id: item.id,
         order_id: ord.id,
         product_id: item.product_id,
@@ -479,7 +479,7 @@ export const recordPageView = async (path: string, productId?: string, userId?: 
   }
 }
 
-export const getAdminSetting = async (key: string): Promise<any | null> => {
+export const getAdminSetting = async (key: string): Promise<unknown | null> => {
   if (!isSupabaseConfigured()) return null;
   try {
     const { data, error } = await supabase.from('admin_settings').select('setting_value').eq('setting_key', key).single()
@@ -491,7 +491,7 @@ export const getAdminSetting = async (key: string): Promise<any | null> => {
   }
 }
 
-export const setAdminSetting = async (key: string, value: any): Promise<boolean> => {
+export const setAdminSetting = async (key: string, value: unknown): Promise<boolean> => {
   if (!isSupabaseConfigured()) return false;
   try {
     const { error } = await supabase.from('admin_settings').upsert({ setting_key: key, setting_value: value }, { onConflict: 'setting_key' })

@@ -398,7 +398,7 @@ function ProductsContent() {
 
           {/* Desktop Sidebar */}
           <div className="hidden lg:block lg:col-span-1 self-start sticky top-24">
-            <SidebarContent />
+            {SidebarContent()}
           </div>
 
           {/* Products Column */}
@@ -528,7 +528,7 @@ function ProductsContent() {
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
-              <SidebarContent />
+              {SidebarContent()}
             </div>
             <div className="p-4 border-t border-gray-100 bg-white sticky bottom-0">
               <button onClick={() => setMobileOpen(false)} className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition">

@@ -1,0 +1,278 @@
+﻿
+> igo-cropcare@0.1.0 lint
+> eslint
+
+
+D:\Igo-websites\Igo- Crop Care\app\admin\customers\page.tsx
+   40:30  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  108:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Igo-websites\Igo- Crop Care\app\admin\leads\page.tsx
+    4:41  warning  'Calendar' is defined but never used      @typescript-eslint/no-unused-vars
+   29:31  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   43:35  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   84:36  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  134:40  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Igo-websites\Igo- Crop Care\app\admin\orders\page.tsx
+  26:39  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  40:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Igo-websites\Igo- Crop Care\app\admin\orders\page.tsx:40:5
+  38 |
+  39 |   useEffect(() => {
+> 40 |     fetchOrders()
+     |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  41 |   }, [])
+  42 |
+  43 |   const getStatusColor = (status: string) => {  react-hooks/set-state-in-effect
+
+D:\Igo-websites\Igo- Crop Care\app\admin\page.tsx
+   4:10  warning  'ArrowUpRight' is defined but never used  @typescript-eslint/no-unused-vars
+  17:52  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  55:59  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Igo-websites\Igo- Crop Care\app\admin\products\page.tsx
+   31:5    error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Igo-websites\Igo- Crop Care\app\admin\products\page.tsx:31:5
+  29 |
+  30 |   useEffect(() => {
+> 31 |     fetchProducts()
+     |     ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  32 |   }, [])
+  33 |
+  34 |   const handleSave = async (e: React.FormEvent) => {  react-hooks/set-state-in-effect
+   60:19   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+   71:19   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+   94:21   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  236:105  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+
+D:\Igo-websites\Igo- Crop Care\app\api\ai\crop-advisor\route.ts
+  5:37  warning  'location' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\app\api\orders\route.ts
+  18:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\app\api\orders\user\[userId]\route.ts
+  12:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\app\api\products\[id]\route.ts
+   4:11  warning  'Params' is defined but never used  @typescript-eslint/no-unused-vars
+  20:12  warning  'error' is defined but never used   @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\app\api\products\route.ts
+  52:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:75  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  61:56  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Igo-websites\Igo- Crop Care\app\api\reviews\[productId]\route.ts
+  12:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  32:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\app\b2b\page.tsx
+  49:23  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\Igo-websites\Igo- Crop Care\app\cart\page.tsx
+  10:64  warning  'ChevronRight' is defined but never used              @typescript-eslint/no-unused-vars
+  19:10  warning  'loadingProducts' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\app\knowledge\page.tsx
+    6:35  warning  'Tag' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+    6:57  warning  'Heart' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+    6:64  warning  'MessageSquare' is defined but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  172:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  250:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\Igo-websites\Igo- Crop Care\app\page.tsx
+   2:8   warning  'CustomerTestimonials' is defined but never used     @typescript-eslint/no-unused-vars
+   4:32  warning  'ChevronRight' is defined but never used             @typescript-eslint/no-unused-vars
+   4:46  warning  'Clock' is defined but never used                    @typescript-eslint/no-unused-vars
+   5:10  warning  'Leaf' is defined but never used                     @typescript-eslint/no-unused-vars
+   5:16  warning  'MessageCircle' is defined but never used            @typescript-eslint/no-unused-vars
+   6:16  warning  'Sprout' is defined but never used                   @typescript-eslint/no-unused-vars
+   6:24  warning  'Star' is defined but never used                     @typescript-eslint/no-unused-vars
+   6:37  warning  'Users' is defined but never used                    @typescript-eslint/no-unused-vars
+   6:44  warning  'Zap' is defined but never used                      @typescript-eslint/no-unused-vars
+  50:7   warning  'PESTS_DISEASES' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\app\products\[id]\page.tsx
+    6:8   warning  'ProductCard' is defined but never used                                                                      @typescript-eslint/no-unused-vars
+    9:37  warning  'Send' is defined but never used                                                                             @typescript-eslint/no-unused-vars
+   14:8   warning  'LeadCaptureModal' is defined but never used                                                                 @typescript-eslint/no-unused-vars
+   95:10  warning  'relatedProducts' is assigned a value but never used                                                         @typescript-eslint/no-unused-vars
+  142:6   warning  React Hook useEffect has a missing dependency: 'user?.id'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  186:14  warning  'err' is defined but never used                                                                              @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\app\products\page.tsx
+   10:3   warning  'Leaf' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   10:9   warning  'FlaskConical' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+   10:23  warning  'Sprout' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+   10:31  warning  'Zap' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   10:36  warning  'Wheat' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   10:43  warning  'Flower2' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  401:14  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\Igo-websites\Igo- Crop Care\app\products\page.tsx:401:14
+  399 |           {/* Desktop Sidebar */}
+  400 |           <div className="hidden lg:block lg:col-span-1 self-start sticky top-24">
+> 401 |             <SidebarContent />
+      |              ^^^^^^^^^^^^^^ This component is created during render
+  402 |           </div>
+  403 |
+  404 |           {/* Products Column */}
+
+D:\Igo-websites\Igo- Crop Care\app\products\page.tsx:195:3
+  193 |   /* ΓöÇΓöÇ Sidebar ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+  194 |
+> 195 |   function SidebarContent() {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 196 |     return (
+      | ^^^^^^^^^^^^
+> 197 |       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      ΓÇª
+      | ^^^^^^^^^^^^
+> 338 |     )
+      | ^^^^^^^^^^^^
+> 339 |   }
+      | ^^^^ The component is created during render here
+  340 |
+  341 |   /* ΓöÇΓöÇ Hero config ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+  342 |                                                                                                                                                                                    react-hooks/static-components
+  531:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\Igo-websites\Igo- Crop Care\app\products\page.tsx:531:16
+  529 |             </div>
+  530 |             <div className="flex-1 overflow-y-auto p-4">
+> 531 |               <SidebarContent />
+      |                ^^^^^^^^^^^^^^ This component is created during render
+  532 |             </div>
+  533 |             <div className="p-4 border-t border-gray-100 bg-white sticky bottom-0">
+  534 |               <button onClick={() => setMobileOpen(false)} className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition">
+
+D:\Igo-websites\Igo- Crop Care\app\products\page.tsx:195:3
+  193 |   /* ΓöÇΓöÇ Sidebar ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+  194 |
+> 195 |   function SidebarContent() {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 196 |     return (
+      | ^^^^^^^^^^^^
+> 197 |       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      ΓÇª
+      | ^^^^^^^^^^^^
+> 338 |     )
+      | ^^^^^^^^^^^^
+> 339 |   }
+      | ^^^^ The component is created during render here
+  340 |
+  341 |   /* ΓöÇΓöÇ Hero config ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
+  342 |  react-hooks/static-components
+
+D:\Igo-websites\Igo- Crop Care\app\profile\edit\page.tsx
+  38:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Igo-websites\Igo- Crop Care\app\profile\edit\page.tsx:38:7
+  36 |   useEffect(() => {
+  37 |     if (user) {
+> 38 |       setFormData({
+     |       ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  39 |         first_name: user.first_name || '',
+  40 |         last_name: user.last_name || '',
+  41 |         email: user.email || '',  react-hooks/set-state-in-effect
+
+D:\Igo-websites\Igo- Crop Care\app\profile\orders\page.tsx
+   10:16  warning  'MapPin' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   10:47  warning  'Heart' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   10:54  warning  'Settings' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   10:77  warning  'Eye' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   10:92  warning  'DollarSign' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  169:31  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\Igo-websites\Igo- Crop Care\app\profile\settings\page.tsx
+   9:24  warning  'Settings' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+   9:47  warning  'Shield' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  34:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Igo-websites\Igo- Crop Care\app\profile\settings\page.tsx:34:7
+  32 |     const local = localStorage.getItem('cc_settings')
+  33 |     if (local) {
+> 34 |       setSettings(JSON.parse(local))
+     |       ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  35 |     }
+  36 |   }, [])
+  37 |  react-hooks/set-state-in-effect
+  40:55  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+
+D:\Igo-websites\Igo- Crop Care\app\profile\wishlist\page.tsx
+  45:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\Igo-websites\Igo- Crop Care\app\profile\wishlist\page.tsx:45:5
+  43 |
+  44 |   useEffect(() => {
+> 45 |     loadWishlist()
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  46 |   }, [])
+  47 |
+  48 |   const handleRemove = (id: string) => {  react-hooks/set-state-in-effect
+
+D:\Igo-websites\Igo- Crop Care\components\auth\OTPAuth.tsx
+    3:20  warning  'useRef' is defined but never used                @typescript-eslint/no-unused-vars
+   25:9   warning  'generateOTP' is assigned a value but never used  @typescript-eslint/no-unused-vars
+   52:14  warning  'error' is defined but never used                 @typescript-eslint/no-unused-vars
+  117:14  warning  'error' is defined but never used                 @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\components\layout\EnhancedHeader.tsx
+    7:35  warning  'ArrowRight' is defined but never used                @typescript-eslint/no-unused-vars
+   40:10  warning  'activeMenu' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  117:9   warning  'handleMenuEnter' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  122:9   warning  'handleMenuLeave' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\components\products\ProductCard.tsx
+  3:10  warning  'useEffect' is defined but never used  @typescript-eslint/no-unused-vars
+  3:21  warning  'useState' is defined but never used   @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\components\products\ProductComparisonModal.tsx
+  32:9  warning  'visibleProducts' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\components\sections\HeroDiagnosisWidget.tsx
+  7:39  warning  'ChevronRight' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\Igo-websites\Igo- Crop Care\lib\supabase\client.ts
+  10:12  warning  '_' is defined but never used  @typescript-eslint/no-unused-vars
+
+Γ£û 84 problems (25 errors, 59 warnings)
+

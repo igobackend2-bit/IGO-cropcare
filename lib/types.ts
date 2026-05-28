@@ -137,7 +137,7 @@ export interface PageView {
 export interface AdminSetting {
   id: string
   setting_key: string
-  setting_value: any
+  setting_value: unknown
   updated_at: string
 }
 

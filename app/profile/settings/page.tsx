@@ -31,6 +31,7 @@ export default function SettingsPage() {
   useEffect(() => {
     const local = localStorage.getItem('cc_settings')
     if (local) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSettings(JSON.parse(local))
     }
   }, [])

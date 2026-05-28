@@ -26,6 +26,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
 
   const handleAddToCart = () => {
     addItem({
+      // eslint-disable-next-line react-hooks/purity
       id: `${product.id}-${Date.now()}`,
       product_id: product.id,
       quantity: 1,

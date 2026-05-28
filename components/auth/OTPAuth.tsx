@@ -139,7 +139,7 @@ export default function OTPAuth() {
                 placeholder="Enter 10-digit phone number"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
-              <p className="text-xs text-gray-500 mt-1">We'll send you an OTP on this number</p>
+              <p className="text-xs text-gray-500 mt-1">We&apos;ll send you an OTP on this number</p>
             </div>
             <button
               type="submit"

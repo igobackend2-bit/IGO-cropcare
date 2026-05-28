@@ -257,14 +257,14 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
                         type="submit"
                         className="w-full p-3 text-center text-sm font-bold text-emerald-600 hover:bg-emerald-50 transition"
                       >
-                        View all results for "{searchQuery}"
+                        View all results for &quot;{searchQuery}&quot;
                       </button>
                     </li>
                   </ul>
                 ) : (
                   <div className="p-6 text-center text-sm text-gray-500">
                     <Search className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                    No products found matching "{searchQuery}"
+                    No products found matching &quot;{searchQuery}&quot;
                   </div>
                 )}
               </div>

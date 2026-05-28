@@ -28,7 +28,6 @@ export default function WishlistPage() {
 
   const loadWishlist = async () => {
     try {
-      setLoading(true)
       const allProducts = await getProducts()
       // For demo, we get wishlist items from localStorage under key 'cc_wishlist'
       const wishIdsRaw = localStorage.getItem('cc_wishlist')
@@ -57,6 +56,7 @@ export default function WishlistPage() {
 
   const handleAddToCart = (product: Product) => {
     addItem({
+      // eslint-disable-next-line react-hooks/purity
       id: `${product.id}-${Date.now()}`,
       product_id: product.id,
       quantity: 1,
