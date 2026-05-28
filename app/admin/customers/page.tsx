@@ -37,10 +37,10 @@ export default function AdminCustomersPage() {
         console.error(error)
       } else if (data) {
         const customerMap = new Map<string, CustomerStat>()
-        
-        data.forEach(order => {
-          if (!order.users || !order.users.id) return
-          const uid = order.users.id
+        data.forEach((order: any) => {
+          const user = Array.isArray(order.users) ? order.users[0] : order.users
+          if (!user || !user.id) return
+          const uid = user.id
           const existing = customerMap.get(uid)
           
           if (existing) {
@@ -52,10 +52,10 @@ export default function AdminCustomersPage() {
           } else {
             customerMap.set(uid, {
               id: uid,
-              first_name: order.users.first_name || '',
-              last_name: order.users.last_name || '',
-              email: order.users.email || '',
-              phone: order.users.phone || '',
+              first_name: user.first_name || '',
+              last_name: user.last_name || '',
+              email: user.email || '',
+              phone: user.phone || '',
               total_orders: 1,
               total_spent: Number(order.total_amount),
               last_order_date: order.created_at

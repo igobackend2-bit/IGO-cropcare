@@ -23,11 +23,14 @@ export default function AdminOrdersPage() {
       console.error(error)
     } else {
       // Map the joined users data to customer fields
-      const formatted = data?.map(o => ({
-        ...o,
-        customer_name: o.users ? `${o.users.first_name || ''} ${o.users.last_name || ''}`.trim() : 'Guest Customer',
-        customer_email: o.users?.email || 'N/A'
-      }))
+      const formatted = data?.map((o: any) => {
+        const user = Array.isArray(o.users) ? o.users[0] : o.users
+        return {
+          ...o,
+          customer_name: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'Guest Customer',
+          customer_email: user?.email || 'N/A'
+        }
+      })
       setOrders(formatted as Order[])
     }
     setLoading(false)

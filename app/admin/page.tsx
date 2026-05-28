@@ -180,11 +180,13 @@ export default function AdminDashboard() {
             ) : recentOrders.length === 0 ? (
               <p className="text-slate-500 text-center">No orders yet.</p>
             ) : (
-              recentOrders.map((order) => (
+              recentOrders.map((order) => {
+                const user = Array.isArray(order.users) ? order.users[0] : order.users
+                return (
                 <div key={order.id} className="flex justify-between items-center p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
                   <div>
                     <p className="font-semibold text-slate-900 dark:text-white text-sm">
-                      {order.users ? `${order.users.first_name} ${order.users.last_name}` : 'Guest'}
+                      {user ? `${user.first_name} ${user.last_name}` : 'Guest'}
                     </p>
                     <p className="text-xs text-slate-500">#{order.id.split('-')[0].toUpperCase()}</p>
                   </div>
@@ -193,7 +195,7 @@ export default function AdminDashboard() {
                     <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">{order.status}</p>
                   </div>
                 </div>
-              ))
+              )})
             )}
           </div>
         </div>
