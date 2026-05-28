@@ -1,4 +1,9 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // ─── Vision AI Route ───────────────────────────────────────────────────────
 // Currently uses an intelligent mock that returns realistic disease data.
@@ -233,6 +238,32 @@ export async function POST(req: Request) {
     // ─── Replace this block with real AI vision call (see comments at top) ───
     const result = mockVisionDiagnose();
     // ──────────────────────────────────────────────────────────────────────────
+
+    // Fetch real products from Supabase based on the required categories
+    try {
+      if (result.products && result.products.length > 0) {
+        const categories = [...new Set(result.products.map(p => p.category))];
+        const { data: realProducts, error } = await supabase
+          .from('products')
+          .select('*')
+          .in('category', categories)
+          .limit(3);
+
+        if (!error && realProducts && realProducts.length > 0) {
+          // Replace mock products with real ones from the database
+          result.products = realProducts.map((p, idx) => ({
+            id: p.id,
+            name: p.name,
+            dosage: p.dosage || 'Use as directed on package',
+            price: p.price,
+            urgency: idx === 0 ? 'Highly Recommended' : 'Recommended',
+            category: p.category
+          }));
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching real products for vision diagnosis:', e);
+    }
 
     return NextResponse.json(result);
   } catch (error) {

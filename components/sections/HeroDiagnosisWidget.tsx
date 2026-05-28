@@ -333,7 +333,7 @@ const HeroDiagnosisWidget: FC = () => {
                       <div className="text-right shrink-0">
                         <p className="text-base font-black text-gray-900">₹{p.price}</p>
                         <Link
-                          href={`/products?category=${p.category}`}
+                          href={`/products/${p.id}`}
                           className="mt-2 flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-emerald-600"
                         >
                           <ShoppingCart size={12} /> Buy Now

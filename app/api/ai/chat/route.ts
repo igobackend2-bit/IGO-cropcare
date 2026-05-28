@@ -1,4 +1,9 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 interface RecommendedProduct {
   id: string;
@@ -201,6 +206,32 @@ export async function POST(req: Request) {
     // OR OpenAI: import OpenAI from 'openai' — see SUPABASE_HOSTINGER_GUIDE.md
 
     const result = mockDiagnose(message);
+
+    // Fetch real products from Supabase based on the required categories
+    try {
+      if (result.products && result.products.length > 0) {
+        const categories = [...new Set(result.products.map(p => p.category))];
+        const { data: realProducts, error } = await supabase
+          .from('products')
+          .select('*')
+          .in('category', categories)
+          .limit(3);
+
+        if (!error && realProducts && realProducts.length > 0) {
+          // Replace mock products with real ones from the database
+          result.products = realProducts.map((p, idx) => ({
+            id: p.id,
+            name: p.name,
+            dosage: p.dosage || 'Use as directed on package',
+            price: p.price,
+            urgency: idx === 0 ? 'Highly Recommended' : 'Recommended',
+            category: p.category
+          }));
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching real products for diagnosis:', e);
+    }
 
     return NextResponse.json({
       reply: `Diagnosis complete: ${result.disease} detected with ${Math.round(result.confidence * 100)}% confidence.`,
