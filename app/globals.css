@@ -45,4 +45,5 @@ body {
 * {
   transition-property: background-color, border-color, color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150m
+  transition-duration: 150ms;
+}
