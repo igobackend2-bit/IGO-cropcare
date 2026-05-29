@@ -12,30 +12,47 @@ import {
 
 /* ─── Filter Config ─────────────────────────────────────────────────────────── */
 
-const CATEGORY_OPTIONS = [
-  { id: 'all',             label: 'All Categories',            emoji: '🏪' },
-  { id: 'seeds',           label: 'Premium Seeds',             emoji: '🌱' },
-  { id: 'crop-protection', label: 'Crop Protection',           emoji: '🛡️' },
-  { id: 'fertilizers',     label: 'Fertilizers & Nutrition',   emoji: '🧪' },
-  { id: 'tools',           label: 'Farm Equipment',            emoji: '🔧' },
-]
-
-const SEED_SUBCATEGORIES = [
-  { id: 'all',              label: 'All Seeds',           emoji: '🌱' },
-  { id: 'field-crops',      label: 'Field Crops',         emoji: '🌾' },
-  { id: 'vegetable',        label: 'Vegetables',          emoji: '🥦' },
-  { id: 'fruit-plantation', label: 'Fruits & Plantation', emoji: '🍅' },
-  { id: 'flower-herbal',    label: 'Flowers & Herbal',    emoji: '🌸' },
-]
-
-const FERTILIZER_SUBCATEGORIES = [
-  { id: 'all',           label: 'All Fertilizers',      emoji: '🧪' },
-  { id: 'organic',       label: 'Organic Fertilizers',  emoji: '🌿' },
-  { id: 'chemical',      label: 'Chemical Fertilizers', emoji: '⚗️' },
-  { id: 'biofertilizer', label: 'Bio Fertilizers',      emoji: '🦠' },
-  { id: 'micronutrient', label: 'Micronutrients',        emoji: '🔬' },
-  { id: 'nano',          label: 'Nano Fertilizers',     emoji: '🔭' },
-  { id: 'pgr',           label: 'Growth Promoters',     emoji: '📈' },
+const CATEGORY_TREE = [
+  {
+    id: 'seeds',
+    label: 'Premium Seeds',
+    emoji: '🌱',
+    subcategories: [
+      { id: 'field-crops',      label: 'Field Crops' },
+      { id: 'vegetable',        label: 'Vegetables' },
+      { id: 'fruit-plantation', label: 'Fruits & Plantation' },
+      { id: 'flower-herbal',    label: 'Flowers & Herbal' },
+    ]
+  },
+  {
+    id: 'crop-protection',
+    label: 'Crop Protection',
+    emoji: '🛡️',
+    subcategories: [
+      { id: 'insecticides', label: 'Insecticides' },
+      { id: 'fungicides',   label: 'Fungicides' },
+      { id: 'herbicides',   label: 'Herbicides' },
+    ]
+  },
+  {
+    id: 'fertilizers',
+    label: 'Fertilizers & Nutrition',
+    emoji: '🧪',
+    subcategories: [
+      { id: 'organic',       label: 'Organic Fertilizers' },
+      { id: 'chemical',      label: 'Chemical Fertilizers' },
+      { id: 'biofertilizer', label: 'Bio Fertilizers' },
+      { id: 'micronutrient', label: 'Micronutrients' },
+      { id: 'nano',          label: 'Nano Fertilizers' },
+      { id: 'pgr',           label: 'Growth Promoters' },
+    ]
+  },
+  {
+    id: 'tools',
+    label: 'Farm Equipment',
+    emoji: '🔧',
+    subcategories: []
+  }
 ]
 
 const FORMULATION_OPTIONS = [
@@ -119,8 +136,10 @@ function ProductsContent() {
   const [loading, setLoading]   = useState(true)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [expanded, setExpanded] = useState<Record<string, boolean>>({
-    productCategory: true,
-    subcategory: true,
+    'cat-seeds': true,
+    'cat-crop-protection': true,
+    'cat-fertilizers': true,
+    'cat-tools': true,
     formulation: true,
     pest: false,
     price: true,
@@ -179,12 +198,6 @@ function ProductsContent() {
 
   const isSeedsPage      = category === 'seeds'
   const isFertilizerPage = category === 'fertilizers'
-  const subcategoryOpts  = isSeedsPage
-    ? SEED_SUBCATEGORIES
-    : isFertilizerPage
-      ? FERTILIZER_SUBCATEGORIES
-      : []
-  const showSubcats      = isSeedsPage || isFertilizerPage
   const showFormulation  = isFertilizerPage || category === 'all' || category === 'crop-protection' || category === 'insecticides' || category === 'fungicides' || category === 'herbicides'
   const showPest         = ['all', 'crop-protection', 'insecticides', 'fungicides', 'herbicides'].includes(category)
 
@@ -222,57 +235,69 @@ function ProductsContent() {
 
         <div className="divide-y divide-gray-100">
 
-          <FilterSection
-            title="Product Category"
-            expanded={expanded.productCategory}
-            onToggle={() => toggle('productCategory')}
-          >
-            <div className="space-y-1">
-              {CATEGORY_OPTIONS.map(opt => (
+          <div className="px-5 py-3 bg-gray-50 border-b border-gray-100 cursor-pointer hover:bg-gray-100 transition" onClick={() => pushFilter('category', 'all')}>
+             <span className={`text-sm font-bold ${category === 'all' ? 'text-emerald-700' : 'text-gray-700'}`}>All Categories</span>
+          </div>
+
+          {CATEGORY_TREE.map(cat => (
+            <FilterSection
+              key={cat.id}
+              title={`${cat.emoji} ${cat.label}`}
+              expanded={expanded[`cat-${cat.id}`]}
+              onToggle={() => toggle(`cat-${cat.id}`)}
+            >
+              <div className="space-y-1">
                 <button
-                  key={opt.id}
-                  onClick={() => pushFilter('category', opt.id)}
+                  onClick={() => {
+                    // For crop-protection subcategories (insecticides, etc) they act as main categories
+                    pushFilter('category', cat.id)
+                  }}
                   className={
                     'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ' +
-                    (category === opt.id
+                    (category === cat.id && activeSubCat === 'all'
                       ? 'bg-emerald-600 text-white shadow-sm'
                       : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-800')
                   }
                 >
-                  <span className="text-base leading-none">{opt.emoji}</span>
-                  <span className="flex-1 text-left">{opt.label}</span>
-                  {category === opt.id && <CheckCircle2 className="w-4 h-4 opacity-80 flex-shrink-0" />}
+                  <span className="flex-1 text-left">All {cat.label}</span>
+                  {category === cat.id && activeSubCat === 'all' && <CheckCircle2 className="w-4 h-4 opacity-80 flex-shrink-0" />}
                 </button>
-              ))}
-            </div>
-          </FilterSection>
 
-          {showSubcats && (
-            <FilterSection
-              title={isSeedsPage ? 'Seed Type' : 'Fertilizer Type'}
-              expanded={expanded.subcategory}
-              onToggle={() => toggle('subcategory')}
-            >
-              <div className="space-y-1">
-                {subcategoryOpts.map(opt => (
-                  <button
-                    key={opt.id}
-                    onClick={() => pushFilter('sub', opt.id)}
-                    className={
-                      'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ' +
-                      (activeSubCat === opt.id
-                        ? 'bg-emerald-600 text-white shadow-sm'
-                        : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-800')
-                    }
-                  >
-                    <span className="text-base leading-none">{opt.emoji}</span>
-                    <span className="flex-1 text-left">{opt.label}</span>
-                    {activeSubCat === opt.id && <CheckCircle2 className="w-4 h-4 opacity-80 flex-shrink-0" />}
-                  </button>
-                ))}
+                {cat.subcategories.map(sub => {
+                  // For crop protection, the subcategories (like insecticides) act as main categories in the URL
+                  const isCropProtection = cat.id === 'crop-protection'
+                  const isActive = isCropProtection 
+                    ? category === sub.id 
+                    : (category === cat.id && activeSubCat === sub.id)
+
+                  return (
+                    <button
+                      key={sub.id}
+                      onClick={() => {
+                        if (isCropProtection) {
+                          pushFilter('category', sub.id)
+                        } else {
+                          const params = new URLSearchParams(searchParams?.toString() || '')
+                          params.set('category', cat.id)
+                          params.set('sub', sub.id)
+                          router.push('/products?' + params.toString(), { scroll: false })
+                        }
+                      }}
+                      className={
+                        'w-full flex items-center gap-3 px-3 py-2.5 pl-6 rounded-xl text-sm font-medium transition-all ' +
+                        (isActive
+                          ? 'bg-emerald-600 text-white shadow-sm'
+                          : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-800')
+                      }
+                    >
+                      <span className="flex-1 text-left">{sub.label}</span>
+                      {isActive && <CheckCircle2 className="w-4 h-4 opacity-80 flex-shrink-0" />}
+                    </button>
+                  )
+                })}
               </div>
             </FilterSection>
-          )}
+          ))}
 
           {showFormulation && (
             <FilterSection
@@ -402,26 +427,7 @@ function ProductsContent() {
             </div>
           </div>
 
-          {/* Quick subcategory chips */}
-          {showSubcats && (
-            <div className="flex flex-wrap gap-2 mt-5">
-              {subcategoryOpts.map(opt => (
-                <button
-                  key={opt.id}
-                  onClick={() => pushFilter('sub', opt.id)}
-                  className={
-                    'flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold transition-all border ' +
-                    (activeSubCat === opt.id
-                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
-                      : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-400 hover:text-emerald-700')
-                  }
-                >
-                  <span>{opt.emoji}</span>
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          )}
+          {/* Quick subcategory chips (Optional, removed to prevent duplication since sidebar is comprehensive) */}
         </div>
       </div>
 
@@ -478,9 +484,9 @@ function ProductsContent() {
             {/* Active filter chips */}
             {activeCount > 0 && (
               <div className="mb-4 flex flex-wrap gap-2">
-                {activeSubCat !== 'all' && (
+                {activeSubCat !== 'all' && category !== 'crop-protection' && (
                   <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-3 py-1.5 rounded-full">
-                    {subcategoryOpts.find(s => s.id === activeSubCat)?.label || activeSubCat}
+                    {activeSubCat}
                     <button onClick={() => pushFilter('sub', 'all')}><X className="w-3 h-3" /></button>
                   </span>
                 )}
