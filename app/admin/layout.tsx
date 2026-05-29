@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Package, ShoppingBag, Users, Settings,
-  LogOut, Megaphone, BarChart3, Menu, X, Sprout, Warehouse
+  LogOut, Megaphone, BarChart3, Menu, X, Sprout, Warehouse, MessageSquare, TrendingUp
 } from 'lucide-react'
 
 const NAV = [
@@ -14,7 +14,8 @@ const NAV = [
   { href: '/admin/inventory', label: 'Inventory', icon: Warehouse },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { href: '/admin/customers', label: 'Customers', icon: Users },
-  { href: '/admin/leads', label: 'Leads (CRM)', icon: Users }, // Using Users icon or similar
+  { href: '/admin/support', label: 'Support Inbox', icon: MessageSquare },
+  { href: '/admin/leads', label: 'Leads (CRM)', icon: TrendingUp },
   { href: '/admin', label: 'Analytics', icon: BarChart3 },
   { href: '/admin/banners', label: 'Banners', icon: Megaphone },
   { href: '/admin/settings', label: 'Settings', icon: Settings },

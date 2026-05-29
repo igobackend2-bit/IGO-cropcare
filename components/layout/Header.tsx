@@ -32,20 +32,9 @@ export default function Header() {
           : 'bg-transparent py-5'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex shrink-0 items-center justify-center relative w-48 h-14 group overflow-hidden">
-          <Image 
-            src="/logo.png" 
-            alt="IGO Crop Care Logo" 
-            fill
-            className="object-contain invert mix-blend-screen scale-[2.5] transition-transform group-hover:scale-[2.6]" 
-            priority
-          />
-        </Link>
-
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-3 items-center">
+        {/* Desktop Nav (left) */}
+        <nav className="hidden md:flex items-center gap-8 col-start-1 justify-start">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.label}
@@ -63,10 +52,21 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Mobile Hamburger */}
+        {/* Logo (center) */}
+        <Link href="/" className="col-start-2 flex shrink-0 items-center justify-center relative w-48 h-14 group overflow-hidden">
+          <Image 
+            src="/logo.png" 
+            alt="IGO Crop Care Logo" 
+            fill
+            className="object-contain invert mix-blend-screen scale-[2.5] transition-transform group-hover:scale-[2.6]" 
+            priority
+          />
+        </Link>
+
+        {/* Mobile Hamburger (right) */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-white"
+          className="md:hidden col-start-3 flex justify-end p-2 text-white"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>

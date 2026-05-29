@@ -123,14 +123,14 @@ const HeroDiagnosisWidget: FC = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto rounded-3xl bg-white/90 p-5 shadow-2xl shadow-emerald-900/10 backdrop-blur-md border border-white">
+    <div className="w-full max-w-2xl mx-auto rounded-2xl border border-white/50 bg-white/68 p-4 shadow-xl shadow-slate-950/18 backdrop-blur-md sm:p-5">
       {/* Mode Toggle */}
-      <div className="flex rounded-xl bg-slate-100 p-1 mb-5">
+      <div className="mb-4 flex rounded-xl border border-white/40 bg-white/35 p-1 shadow-sm backdrop-blur-sm">
         <button
           type="button"
           onClick={() => { setMode('text'); setResult(null); setPreview(null); setError(null); }}
           className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition-all ${
-            mode === 'text' ? 'bg-white text-emerald-700 shadow-sm border border-gray-200/50' : 'text-gray-500 hover:text-gray-700'
+            mode === 'text' ? 'bg-white/92 text-emerald-700 shadow-sm border border-white/70' : 'text-slate-600 hover:bg-white/40 hover:text-slate-800'
           }`}
         >
           <Search size={16} />
@@ -140,7 +140,7 @@ const HeroDiagnosisWidget: FC = () => {
           type="button"
           onClick={() => { setMode('image'); setResult(null); setQuery(''); setError(null); }}
           className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition-all ${
-            mode === 'image' ? 'bg-white text-emerald-700 shadow-sm border border-gray-200/50' : 'text-gray-500 hover:text-gray-700'
+            mode === 'image' ? 'bg-white/92 text-emerald-700 shadow-sm border border-white/70' : 'text-slate-600 hover:bg-white/40 hover:text-slate-800'
           }`}
         >
           <Camera size={16} />
@@ -150,14 +150,14 @@ const HeroDiagnosisWidget: FC = () => {
 
       {/* Input Area */}
       {!result && (
-        <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+        <div className="rounded-2xl border border-white/55 bg-white/72 p-4 shadow-sm backdrop-blur-sm">
           {mode === 'text' ? (
             <>
               <textarea
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="E.g. My tomato leaves are turning yellow with brown spots and the plant is wilting…"
-                className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10"
+                className="w-full resize-none rounded-xl border border-slate-200/80 bg-white/78 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10"
                 rows={3}
               />
               <div className="mt-3 flex flex-wrap gap-2">
@@ -166,7 +166,7 @@ const HeroDiagnosisWidget: FC = () => {
                     key={sq.query}
                     type="button"
                     onClick={() => setQuery(sq.query)}
-                    className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-bold text-gray-600 transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700"
+                    className="rounded-full border border-white/70 bg-white/72 px-3 py-1.5 text-xs font-bold text-slate-600 transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700"
                   >
                     {sq.label}
                   </button>
@@ -181,7 +181,7 @@ const HeroDiagnosisWidget: FC = () => {
               className={`relative flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all ${
                 preview
                   ? 'border-transparent p-0 overflow-hidden'
-                  : 'border-gray-300 bg-gray-50 hover:border-emerald-400 hover:bg-emerald-50/50'
+                  : 'border-slate-300/80 bg-white/62 hover:border-emerald-400 hover:bg-emerald-50/70'
               }`}
             >
               {preview ? (

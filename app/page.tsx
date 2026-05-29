@@ -39,14 +39,13 @@ const HOW_IT_WORKS = [
 ];
 
 const FLASH_DEALS = [
-  { id: 'fd1', name: 'Premium Copper Fungicide WP', brand: 'AgriTech Solutions', category: 'Fungicide', price: 599, mrp: 850, discount: 29, rating: 4.8, reviews: 1204, badge: '🔥 Flash Deal', stock: 'Only 12 left', image: '/products/fungicide_copper.png', href: '/products?category=fungicides' },
-  { id: 'fd2', name: 'NPK 19:19:19 Water Soluble Fertilizer', brand: 'EcoGrow', category: 'Fertilizer', price: 349, mrp: 550, discount: 37, rating: 4.9, reviews: 3218, badge: '⭐ Best Seller', stock: 'Fast Moving', image: '/products/fertilizer_npk.png', href: '/products?category=fertilizers' },
-  { id: 'fd3', name: 'Broad Spectrum Insecticide 100ml', brand: 'CropGuard', category: 'Insecticide', price: 139, mrp: 220, discount: 37, rating: 4.7, reviews: 642, badge: '⚡ Top Deal', stock: '28 sold today', image: '/products/insecticide_bottle.png', href: '/products?category=insecticides' },
-  { id: 'fd4', name: 'F1 Hybrid Tomato Seeds (High Yield)', brand: 'SeedMaster', category: 'Seeds', price: 1099, mrp: 1525, discount: 28, rating: 4.8, reviews: 877, badge: '🌱 Premium', stock: 'Limited Stock', image: '/products/seeds_tomato.png', href: '/products?category=seeds' },
-  { id: 'fd5', name: 'Pure Cold Pressed Neem Oil', brand: 'NatureCare', category: 'Organic', price: 399, mrp: 599, discount: 33, rating: 4.6, reviews: 523, badge: '🌿 Organic', stock: 'In Stock', image: '/products/neem_oil.png', href: '/products?category=organic' },
-  { id: 'fd6', name: 'Systemic Root Fungicide', brand: 'PlantShield', category: 'Fungicide', price: 89, mrp: 111, discount: 20, rating: 4.5, reviews: 990, badge: '💰 Value Pack', stock: 'In Stock', image: '/products/fungicide_root.png', href: '/products?category=fungicides' },
+  { id: 'ch-f-002', name: 'Chemica DAP 50kg (Di-Ammonium Phosphate)', brand: 'Chemica', category: 'Fertilizer', price: 1350, mrp: 1500, discount: 10, rating: 4.8, reviews: 3892, badge: 'Hot Deal', stock: 'In Stock', image: '/products/chemica/dap.png', href: '/products/ch-f-002' },
+  { id: 'ch-f-003', name: 'Chemica Ammonium Nitrate (34% N)', brand: 'Chemica', category: 'Fertilizer', price: 580, mrp: 750, discount: 23, rating: 4.6, reviews: 876, badge: 'Fast Acting', stock: 'In Stock', image: '/products/chemica/ammonium-nitrate.png', href: '/products/ch-f-003' },
+  { id: 'ch-f-005', name: 'Chemica CAN (Calcium Ammonium Nitrate)', brand: 'Chemica', category: 'Fertilizer', price: 680, mrp: 880, discount: 23, rating: 4.7, reviews: 654, badge: 'Greenhouse Pick', stock: 'In Stock', image: '/products/chemica/calcium-ammonium-nitrate.png', href: '/products/ch-f-005' },
+  { id: 'ch-o-001', name: 'Chemica Bio Compost (Enriched)', brand: 'Chemica', category: 'Organic', price: 299, mrp: 399, discount: 25, rating: 4.8, reviews: 1456, badge: 'Organic', stock: 'In Stock', image: '/products/chemica/bio-compost.png', href: '/products/ch-o-001' },
+  { id: 'ch-o-002', name: 'Chemica Coco Peat Block 5kg', brand: 'Chemica', category: 'Organic', price: 180, mrp: 249, discount: 28, rating: 4.9, reviews: 2310, badge: 'Nursery Pick', stock: 'In Stock', image: '/products/chemica/coco-peat.png', href: '/products/ch-o-002' },
+  { id: 'ch-s-001', name: 'Chemica Paddy Seeds (Hybrid Short Duration)', brand: 'Chemica', category: 'Seeds', price: 580, mrp: 720, discount: 19, rating: 4.8, reviews: 2876, badge: 'High Yield', stock: 'In Stock', image: '/products/chemica/paddy-seed.png', href: '/products/ch-s-001' },
 ];
-
 const PESTS_DISEASES = [
   { name: 'Aphids & Whitefly', emoji: '🦟', href: '/products?pest=aphids', color: 'bg-white border-gray-100 hover:border-red-300 hover:shadow-md' },
   { name: 'Leaf Blight', emoji: '🍂', href: '/products?disease=blight', color: 'bg-white border-gray-100 hover:border-orange-300 hover:shadow-md' },
@@ -124,65 +123,67 @@ export default function Home() {
     <main className="min-h-screen bg-slate-50 text-gray-900 pb-16 md:pb-0">
 
       {/* ═══ PREMIUM LIGHT HERO ═════════════════════════════════════════ */}
-      <section className="relative pt-8 pb-16 lg:pt-24 lg:pb-32 overflow-hidden bg-white">
-        {/* Background Image & Overlay */}
+      <section className="relative h-[calc(100svh-94px)] min-h-[500px] max-h-[650px] overflow-hidden bg-slate-950">
+        {/* Background Video & Overlay */}
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/hero_agritech.png"
-            alt="Futuristic agricultural field"
-            fill priority sizes="100vw"
-            className="object-cover opacity-80"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-white/50 to-white/95" />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/header-bg.png"
+            className="absolute inset-0 h-full w-full object-cover object-center brightness-[0.82] pointer-events-none"
+            aria-hidden="true"
+          >
+            <source src="/hero_background.webm" type="video/webm" />
+            Your browser does not support the video tag.
+          </video>
+
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/10 via-slate-950/28 to-slate-950/72" />
         </div>
 
-        {/* Floating Decorative Elements */}
-        <div className="absolute top-20 left-10 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl hidden sm:block" />
-        <div className="absolute top-40 right-10 h-72 w-72 rounded-full bg-blue-400/10 blur-3xl hidden sm:block" />
+        <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-4 py-6 text-center md:text-left">
 
-        <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-4 text-center">
+          <div className="mx-auto max-w-3xl md:mx-0">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-200/50 bg-emerald-50/90 px-4 py-1.5 text-[11px] font-bold text-emerald-900 shadow-sm sm:text-xs">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              Next-Generation Agriculture Platform
+            </div>
 
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-[11px] font-bold text-emerald-800 shadow-sm sm:px-5 sm:py-2 sm:text-xs">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-            Next-Generation Agriculture Platform
-          </div>
+            <h1 className="mx-auto max-w-4xl text-3xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-4xl md:mx-0 lg:text-5xl">
+              Empowering Farmers with
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-emerald-100 mt-1 sm:mt-2">
+                Precision & Intelligence
+              </span>
+            </h1>
 
-          <h1 className="mx-auto max-w-4xl text-3xl font-extrabold leading-[1.15] tracking-tight text-gray-900 sm:text-4xl md:text-5xl lg:text-6xl">
-            Empowering Farmers with
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-500 mt-1 sm:mt-2">
-              Precision & Intelligence
-            </span>
-          </h1>
+            <p className="mx-auto mt-3 max-w-2xl text-base text-slate-200 sm:text-lg md:mx-0 lg:text-xl font-medium">
+              Get 100% genuine products, free AI crop diagnosis, and expert agricultural guidance delivered right to your farm.
+            </p>
 
-          <p className="mx-auto mt-4 max-w-2xl text-base text-gray-600 sm:mt-6 sm:text-lg md:text-xl font-medium">
-            Get 100% genuine products, free AI crop diagnosis, and expert agricultural guidance delivered right to your farm.
-          </p>
-
-          <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-10 sm:gap-4">
-            <Link href="/products" className="rounded-full bg-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-xl sm:px-8 sm:py-3.5">
-              Shop Farm Inputs
-            </Link>
-            <Link href="/crop-doctor" className="flex items-center gap-2 rounded-full border-2 border-emerald-100 bg-white px-6 py-3 text-sm font-bold text-emerald-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50 sm:px-8 sm:py-3.5">
-              <Bot size={18} /> Try Free AI Doctor
-            </Link>
-          </div>
-
-          <div className="mt-10 w-full max-w-3xl sm:mt-16">
-            <HeroDiagnosisWidget />
+            <div className="mt-5 flex flex-wrap justify-center gap-3 sm:gap-4 md:justify-start">
+              <Link href="/products" className="rounded-full bg-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-xl sm:px-8 sm:py-3.5">
+                Shop Farm Inputs
+              </Link>
+              <Link href="/crop-doctor" className="flex items-center gap-2 rounded-full border-2 border-emerald-100 bg-white px-6 py-3 text-sm font-bold text-emerald-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50 sm:px-8 sm:py-3.5">
+                <Bot size={18} /> Try Free AI Doctor
+              </Link>
+            </div>
           </div>
 
           {/* Trust Indicators */}
-          <div className="mt-10 grid grid-cols-2 gap-4 border-t border-gray-100 pt-8 w-full max-w-lg sm:flex sm:flex-wrap sm:justify-center sm:gap-8 sm:max-w-none md:gap-16">
+          <div className="absolute bottom-5 left-1/2 grid w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 grid-cols-2 gap-4 border-t border-white/20 pt-4 sm:flex sm:flex-wrap sm:justify-center sm:gap-8 sm:max-w-none md:hidden">
             {[
-              { label: 'Certified Quality', icon: <ShieldCheck className="text-emerald-500" /> },
-              { label: 'Fast Farm Delivery', icon: <Truck className="text-emerald-500" /> },
-              { label: '24/7 Expert Support', icon: <Phone className="text-emerald-500" /> },
-              { label: 'Secure Payments', icon: <BadgeCheck className="text-emerald-500" /> },
+              { label: 'Certified Quality', icon: <ShieldCheck className="text-emerald-300" /> },
+              { label: 'Fast Farm Delivery', icon: <Truck className="text-emerald-300" /> },
+              { label: '24/7 Expert Support', icon: <Phone className="text-emerald-300" /> },
+              { label: 'Secure Payments', icon: <BadgeCheck className="text-emerald-300" /> },
             ].map((feature) => (
-              <div key={feature.label} className="flex items-center justify-center gap-2 text-xs font-bold text-gray-700 sm:justify-start sm:text-sm">
+              <div key={feature.label} className="flex items-center justify-center gap-2 text-xs font-bold text-slate-200 sm:justify-start sm:text-sm">
                 {feature.icon}
                 {feature.label}
               </div>
@@ -193,6 +194,20 @@ export default function Home() {
       </section>
 
       {/* ═══ CATEGORIES SHOWCASE ════════════════════════════════════════ */}
+      <section className="bg-gradient-to-b from-slate-100 to-white px-4 py-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto mb-6 max-w-2xl text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-700">
+              <Bot size={14} /> Free AI Crop Diagnosis
+            </span>
+            <h2 className="mt-3 text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
+              Describe Symptoms or Upload a Crop Photo
+            </h2>
+          </div>
+          <HeroDiagnosisWidget />
+        </div>
+      </section>
+
       <section className="py-12 px-4 bg-white lg:py-20">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">

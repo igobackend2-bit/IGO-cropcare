@@ -63,7 +63,22 @@ export default function CheckoutPage() {
         const res = await fetch('/api/orders', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: user.id, totalAmount: total, items: orderItems }),
+          body: JSON.stringify({
+            userId: user.id,
+            totalAmount: total,
+            items: orderItems,
+            paymentMethod,
+            customerEmail: user.email || '',
+            customerName: address.name || `${user.first_name || ''} ${user.last_name || ''}`.trim(),
+            shippingAddress: {
+              name: address.name,
+              line1: address.line1,
+              city: address.city,
+              state: address.state,
+              pincode: address.pincode,
+              phone: address.phone,
+            },
+          }),
         })
         if (res.ok) {
           savedOrder = await res.json()

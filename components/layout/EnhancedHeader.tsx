@@ -4,10 +4,9 @@ import { FC, useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import {
   ChevronDown, Heart, Menu, Search, ShoppingCart, Sprout, User, X,
-  Phone, MessageCircle, Zap, Tag, ArrowRight, Bell, LogOut, Settings, Package
+  Bell, LogOut, Settings, Package
 } from 'lucide-react';
 import Image from 'next/image';
-import { supabase } from '@/lib/supabase/client';
 import { useAuthStore, useWishlistStore } from '@/lib/store';
 import { Product } from '@/lib/types';
 import { useRouter } from 'next/navigation';
@@ -40,7 +39,6 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
-  const [dbBanner, setDbBanner] = useState<{isActive: boolean, text: string, link: string} | null>(null);
   const menuTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // New hooks
@@ -118,12 +116,6 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
   };
 
   useEffect(() => {
-    const fetchBanner = async () => {
-      const { data } = await supabase.from('admin_settings').select('setting_value').eq('setting_key', 'header_banner').single()
-      if (data?.setting_value) setDbBanner(data.setting_value)
-    }
-    fetchBanner()
-    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -143,54 +135,17 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
   useEffect(() => () => { if (menuTimeout.current) clearTimeout(menuTimeout.current); }, []);
 
   return (
-    <header className={`w-full sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'shadow-md' : ''}`}>
+    <header className={`w-full sticky top-0 z-50 overflow-visible transition-all duration-300 ${isScrolled ? 'shadow-lg shadow-slate-900/10' : 'shadow-sm shadow-slate-900/5'}`}>
       
       {/* Background Banner */}
       <div className="absolute inset-0 z-[-1] overflow-hidden pointer-events-none">
-        <Image src="/header-bg.png" alt="Header Background" fill className="object-cover opacity-20" priority />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/80 to-white/95" />
+        <Image src="/header-bg.png" alt="Header Background" fill className="object-cover opacity-45" priority />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/55 via-white/72 to-white/86" />
       </div>
 
-      {/* Top Utility Bar - Replaced with Dynamic Banner if active */}
-      {dbBanner?.isActive ? (
-        <div className="bg-primary-600 text-white py-2 px-4 text-center text-sm font-medium flex items-center justify-center shadow-md relative z-10 animate-pulse">
-          {dbBanner.text}
-          {dbBanner.link && (
-            <Link href={dbBanner.link} className="ml-2 underline underline-offset-2 opacity-90 hover:opacity-100 font-bold">
-              Click Here
-            </Link>
-          )}
-        </div>
-      ) : (
-        <div className="hidden bg-emerald-900/90 backdrop-blur-sm px-4 py-2 text-[11px] font-medium text-emerald-50 md:block transition-colors">
-          <div className="mx-auto flex max-w-7xl items-center justify-between">
-            <div className="flex items-center gap-6">
-              <a href="https://wa.me/917428208822" className="flex items-center gap-1.5 hover:text-white transition">
-                <MessageCircle size={12} /> Order via WhatsApp
-              </a>
-              <a href="/b2b" className="flex items-center gap-1.5 hover:text-white transition">
-                <Zap size={12} /> B2B Procurement
-              </a>
-              <span className="flex items-center gap-1.5 text-emerald-200">
-                <Tag size={12} /> 100% Genuine Agriculture Products
-              </span>
-            </div>
-            <div className="flex items-center gap-6">
-              <a href="/crop-doctor" className="flex items-center gap-1.5 font-bold text-yellow-300 hover:text-yellow-100 transition tracking-wide">
-                🤖 FREE AI CROP DIAGNOSIS
-              </a>
-              <a href="/orders" className="hover:text-white transition">Track Order</a>
-              <a href="tel:+917428208822" className="flex items-center gap-1.5 hover:text-white transition font-bold">
-                <Phone size={12} /> +91 74282 08822
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Main Navigation - Glassmorphic */}
-      <nav className="bg-white/70 backdrop-blur-xl border-b border-gray-200/50">
-        <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-4">
+      <nav className="bg-white/88 backdrop-blur-xl border-b border-gray-100">
+        <div className="mx-auto flex h-16 max-w-7xl items-center gap-5 px-4">
           
           {/* Mobile Menu Toggle */}
           <button
@@ -202,12 +157,12 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
           </button>
 
           {/* Logo */}
-          <Link href="/" className="flex shrink-0 items-center justify-center relative w-48 h-14 group cursor-pointer mr-4 overflow-hidden rounded-xl">
+          <Link href="/" className="relative mr-2 flex h-12 w-40 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-white">
             <Image 
               src="/logo.png" 
               alt="IGO Crop Care Logo" 
               fill
-              className="object-contain mix-blend-multiply scale-[2.5] transition-transform group-hover:scale-[2.6]"
+              className="object-contain mix-blend-multiply scale-[1.9] transition-transform hover:scale-[2]"
               priority
             />
           </Link>
@@ -216,7 +171,7 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
           <form 
             ref={searchRef}
             onSubmit={handleSearchSubmit} 
-            className="relative hidden flex-1 max-w-2xl mx-auto lg:flex group z-50"
+            className="relative z-50 mx-auto hidden max-w-[680px] flex-1 lg:flex group"
           >
             <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
               <Search size={18} className="text-gray-400 group-focus-within:text-emerald-600 transition-colors" />
@@ -228,12 +183,12 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
               placeholder="Search for seeds, fertilizers, or diseases..."
-              className="w-full rounded-full border border-gray-200/80 bg-white/70 backdrop-blur-sm py-3 pl-12 pr-24 text-sm text-gray-900 transition-all focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10"
+              className="h-11 w-full rounded-full border border-gray-200 bg-white pl-12 pr-28 text-sm text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10"
               autoComplete="off"
             />
             <button
               type="submit"
-              className="absolute right-1.5 top-1.5 rounded-full bg-emerald-600 px-5 py-1.5 text-sm font-bold text-white transition hover:bg-emerald-700 shadow-sm"
+              className="absolute right-1.5 top-1/2 h-8 -translate-y-1/2 rounded-full bg-emerald-600 px-5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700"
             >
               Search
             </button>
@@ -289,7 +244,7 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
           </form>
 
           {/* Right Actions */}
-          <div className="ml-auto flex items-center gap-1 sm:gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-2">
             
             {/* Notification Bell */}
             <div className="relative">
@@ -301,7 +256,7 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
                     setUnreadCount(0);
                   }
                 }}
-                className="relative rounded-full p-2.5 text-gray-600 transition hover:bg-gray-100 hover:text-emerald-600"
+                className="relative flex h-10 w-10 items-center justify-center rounded-full text-gray-600 transition hover:bg-gray-100 hover:text-emerald-600"
               >
                 <Bell size={22} />
                 {unreadCount > 0 && (
@@ -335,7 +290,7 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
             {/* Wishlist */}
             <Link
               href="/wishlist"
-              className="relative rounded-full p-2.5 text-gray-600 transition hover:bg-gray-100 hover:text-red-500"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full text-gray-600 transition hover:bg-gray-100 hover:text-red-500"
             >
               <Heart size={22} />
               {wishlistItems.length > 0 && (
@@ -348,7 +303,7 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
             {/* Cart */}
             <Link
               href="/cart"
-              className="relative flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-white shadow-md transition hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5"
+              className="relative flex h-10 items-center gap-2 rounded-full bg-emerald-600 px-4 text-white shadow-md transition hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5"
             >
               <ShoppingCart size={20} />
               <span className="hidden text-sm font-bold sm:block">Cart</span>
@@ -413,7 +368,7 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
             ) : (
               <Link
                 href="/login"
-                className="hidden lg:flex ml-2 items-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 transition hover:bg-gray-50 hover:border-gray-300"
+                className="ml-1 hidden h-10 items-center gap-2 rounded-full border border-gray-200 bg-white px-4 text-sm font-bold text-gray-700 transition hover:bg-gray-50 hover:border-gray-300 lg:flex"
               >
                 <User size={18} />
                 <span>Login</span>
@@ -433,39 +388,30 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
               type="text"
               name="search"
               placeholder="Search products..."
-              className="w-full rounded-full border border-gray-200/80 bg-white/70 backdrop-blur-sm py-2.5 pl-10 pr-4 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              className="w-full rounded-full border border-white/70 bg-white/78 backdrop-blur-sm py-2.5 pl-10 pr-4 text-sm shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
           </form>
         </div>
       </nav>
 
       {/* Mega Menu Bar */}
-      <div className="hidden bg-white/80 backdrop-blur-xl border-b border-gray-200/50 lg:block relative z-40 shadow-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-center gap-6 px-4">
-          <Link href="/products" className="flex items-center gap-1.5 py-3.5 text-sm font-black uppercase tracking-wider text-gray-900 transition hover:text-emerald-600">
+      <div className="relative z-40 hidden border-b border-gray-100 bg-white/92 shadow-sm backdrop-blur-xl lg:block">
+        <div className="mx-auto flex h-11 max-w-7xl items-center px-4">
+          <Link href="/products" className="flex h-full min-w-44 items-center gap-1.5 border-r border-gray-200 pr-6 text-sm font-black uppercase tracking-wider text-gray-900 transition hover:text-emerald-600">
             <Menu size={16} /> All Categories
           </Link>
-          
-          <div className="h-4 w-px bg-gray-200" />
 
-          {megaMenus.map((menu) => (
-            <Link
-              key={menu.label}
-              href={menu.href}
-              className="flex items-center py-3.5 text-sm font-bold text-gray-600 hover:text-emerald-600 transition-colors"
-            >
-              {menu.label}
-            </Link>
-          ))}
-
-          <div className="h-4 w-px bg-gray-200 ml-auto" />
-          
-          <Link
-            href="/products?sort=discount"
-            className="flex items-center gap-1.5 py-3.5 text-sm font-black text-red-500 transition hover:text-red-600"
-          >
-            <Tag size={16} /> Hot Deals
-          </Link>
+          <div className="grid h-full flex-1 grid-cols-4">
+            {megaMenus.map((menu) => (
+              <Link
+                key={menu.label}
+                href={menu.href}
+                className="flex h-full items-center justify-center px-4 text-sm font-bold text-gray-600 transition-colors hover:bg-emerald-50 hover:text-emerald-700"
+              >
+                {menu.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 

@@ -43,6 +43,10 @@ export async function GET(request: Request) {
       if (category !== 'all') {
         if (category === 'crop-protection') {
           if (!['insecticides', 'herbicides', 'fungicides'].includes(product.category)) return false
+        } else if (category === 'organic') {
+          // Backward-compatible shortcut used by the homepage Bio / Organic link.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if (product.category !== 'fertilizers' || (product as any).subCategory !== 'organic') return false
         } else {
           if (product.category !== category) return false
         }
