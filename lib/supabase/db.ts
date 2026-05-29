@@ -16,99 +16,8 @@ const convertExtendedProduct = (ep: ExtendedProduct): Product => ({
   created_at: new Date().toISOString(),
 })
 
-// Default mock products matching the e-commerce category lists
-const INITIAL_PRODUCTS: Product[] = [
-  {
-    id: '1',
-    name: 'Premium Tomato Seeds - F1 Hybrid',
-    description: 'High-yield F1 hybrid tomato seeds with excellent disease resistance. Produces uniform, bright red fruits. Perfect for commercial and home gardens. Germination rate: 95%+. Best suited for winter and spring planting.',
-    category: 'seeds',
-    price: 1200,
-    discount: 200,
-    image_url: '/products/seeds_tomato.png',
-    rating: 4.8,
-    reviews_count: 1245,
-    stock: 150,
-    brand: 'SeedMaster',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    name: 'NPK 19:19:19 Premium Fertilizer',
-    description: 'Complete balanced water-soluble fertilizer. Instantly available nutrients for rapid growth. Enhanced with essential micronutrients (Zn, B, Mo) to prevent nutrient deficiencies. Perfect for all crops. Dissolve 1g to 2g per liter of water for foliage spray or drip irrigation.',
-    category: 'fertilizers',
-    price: 450,
-    discount: 75,
-    image_url: '/products/seeds_tomato.png',
-    rating: 4.9,
-    reviews_count: 2389,
-    stock: 200,
-    brand: 'EcoGrow',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    name: 'Broad Spectrum Herbicide 41% SL',
-    description: 'Non-selective, systemic post-emergence herbicide used to control annual and perennial weeds. Highly effective on broadleaf weeds and grasses. Absorbs through foliage and translocates throughout the plant down to root systems.',
-    category: 'herbicides',
-    price: 225,
-    discount: 50,
-    image_url: '/products/fertilizer_npk.png',
-    rating: 4.6,
-    reviews_count: 156,
-    stock: 80,
-    brand: 'AgriTech Solutions',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    name: 'Organic Neem Oil Insecticide',
-    description: 'Pure cold-pressed organic neem oil formulation with 10,000 PPM Azadirachtin. Controls whiteflies, aphids, thrips, spider mites, and scale insects. 100% natural and biodegradable, certified for organic farming. Spray mix: 5ml per Liter of water with emulsifier.',
-    category: 'insecticides',
-    price: 1150,
-    discount: 300,
-    image_url: '/products/insecticide_bottle.png',
-    rating: 4.7,
-    reviews_count: 423,
-    stock: 60,
-    brand: 'NatureCare',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    name: 'Systemic Fungicide 75% WP',
-    description: 'Broad-spectrum contact fungicide with multi-site action. Effective against a wide range of fungal diseases like downy mildew, early and late blights, leaf spots, and rusts. Excellent weatherability and stickiness. Recommended dosage: 2-2.5g per Liter of water.',
-    category: 'fungicides',
-    price: 299,
-    discount: 45,
-    image_url: '/products/fungicide_copper.png',
-    rating: 4.6,
-    reviews_count: 978,
-    stock: 180,
-    brand: 'PlantShield',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '6',
-    name: 'Professional Hand Weeder Set',
-    description: 'Premium quality gardening hand tools crafted with rust-resistant heavy-duty stainless steel. Ergonomically shaped soft-grip handles reduce fatigue. Complete set includes a manual weeder, cultivator, and graduation transplanter trowel.',
-    category: 'tools',
-    price: 799,
-    discount: 150,
-    image_url: '/products/fertilizer_npk.png',
-    rating: 4.5,
-    reviews_count: 542,
-    stock: 250,
-    brand: 'AgriTools',
-    created_at: new Date().toISOString(),
-  },
-]
-
-
-// Force rebuild to clear Turbopack cache
-// Create a unified master catalog combining initial basic products with the massive rich catalog
+// Real Chemica Fertilizers product catalog — no demo products
 export const FULL_CATALOG: Product[] = [
-  ...INITIAL_PRODUCTS,
   ...ALL_PRODUCTS.map(convertExtendedProduct)
 ]
 
@@ -504,3 +413,4 @@ export const setAdminSetting = async (key: string, value: unknown): Promise<bool
     return false
   }
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
