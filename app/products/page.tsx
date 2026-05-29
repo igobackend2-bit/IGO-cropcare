@@ -214,6 +214,14 @@ function ProductsContent() {
   /* ── Sidebar ────────────────────────────────────────────────────────────── */
 
   function SidebarContent() {
+    const visibleCategories = CATEGORY_TREE.filter(cat => {
+      if (category === 'all') return true;
+      if (cat.id === 'crop-protection') {
+        return ['crop-protection', 'insecticides', 'fungicides', 'herbicides'].includes(category);
+      }
+      return category === cat.id;
+    });
+
     return (
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="px-5 py-4 bg-gradient-to-r from-emerald-50 to-green-50 border-b border-gray-100 flex items-center justify-between">
@@ -239,7 +247,7 @@ function ProductsContent() {
              <span className={`text-sm font-bold ${category === 'all' ? 'text-emerald-700' : 'text-gray-700'}`}>All Categories</span>
           </div>
 
-          {CATEGORY_TREE.map(cat => (
+          {visibleCategories.map(cat => (
             <FilterSection
               key={cat.id}
               title={`${cat.emoji} ${cat.label}`}
