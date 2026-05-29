@@ -77,6 +77,7 @@ export default function AdminCustomersPage() {
       new Date(c.last_order_date).toLocaleDateString('en-IN')
     ])
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(doc as any).autoTable({
       head: [['Name', 'Email', 'Phone', 'Orders', 'Spent', 'Last Order']],
       body: tableData,

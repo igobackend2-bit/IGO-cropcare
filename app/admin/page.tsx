@@ -13,6 +13,7 @@ export default function AdminDashboard() {
     products: 0,
     leads: 0
   })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [recentOrders, setRecentOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 

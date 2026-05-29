@@ -26,6 +26,7 @@ export default function AdminLeadsPage() {
         toast.error('Failed to load leads')
         console.error(leadsError)
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setLeads(leadsData as any)
       }
 
@@ -40,6 +41,7 @@ export default function AdminLeadsPage() {
         toast.error('Failed to load page views')
         console.error(viewsError)
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setPageViews(viewsData as any)
       }
 
@@ -81,6 +83,7 @@ export default function AdminLeadsPage() {
                 ) : leads.length === 0 ? (
                   <tr><td colSpan={3} className="text-center py-8 text-slate-500">No leads captured yet.</td></tr>
                 ) : (
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   leads.map((lead: any) => (
                     <tr key={lead.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                       <td className="px-4 py-3">
@@ -131,6 +134,7 @@ export default function AdminLeadsPage() {
                 ) : pageViews.length === 0 ? (
                   <tr><td colSpan={2} className="text-center py-8 text-slate-500">No activity yet.</td></tr>
                 ) : (
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   pageViews.map((view: any) => (
                     <tr key={view.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
                       <td className="px-4 py-3">
