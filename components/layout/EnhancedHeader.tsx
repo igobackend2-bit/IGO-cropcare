@@ -78,15 +78,20 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
         return;
       }
       setIsSearching(true);
-      const { data } = await supabase
-        .from('products')
-        .select('*')
-        .ilike('name', `%${searchQuery}%`)
-        .eq('is_active', true)
-        .limit(5);
-      
-      setSearchResults(data || []);
-      setIsSearching(false);
+      try {
+        const res = await fetch(`/api/products?search=${encodeURIComponent(searchQuery)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSearchResults(Array.isArray(data) ? data.slice(0, 5) : []);
+        } else {
+          setSearchResults([]);
+        }
+      } catch (err) {
+        console.error(err);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
     };
 
     const debounce = setTimeout(fetchSearchResults, 300);
@@ -97,6 +102,17 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       setIsSearchFocused(false);
+      
+      const exactMatch = searchResults.find(p => p.name.toLowerCase() === searchQuery.trim().toLowerCase());
+      if (exactMatch) {
+        router.push(`/products/${exactMatch.id}`);
+        return;
+      }
+      if (searchResults.length === 1) {
+        router.push(`/products/${searchResults[0].id}`);
+        return;
+      }
+
       router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
     }
   };
