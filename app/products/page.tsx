@@ -12,6 +12,14 @@ import {
 
 /* ─── Filter Config ─────────────────────────────────────────────────────────── */
 
+const CATEGORY_OPTIONS = [
+  { id: 'all',             label: 'All Categories',            emoji: '🏪' },
+  { id: 'seeds',           label: 'Premium Seeds',             emoji: '🌱' },
+  { id: 'crop-protection', label: 'Crop Protection',           emoji: '🛡️' },
+  { id: 'fertilizers',     label: 'Fertilizers & Nutrition',   emoji: '🧪' },
+  { id: 'tools',           label: 'Farm Equipment',            emoji: '🔧' },
+]
+
 const SEED_SUBCATEGORIES = [
   { id: 'all',              label: 'All Seeds',           emoji: '🌱' },
   { id: 'field-crops',      label: 'Field Crops',         emoji: '🌾' },
@@ -111,6 +119,7 @@ function ProductsContent() {
   const [loading, setLoading]   = useState(true)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [expanded, setExpanded] = useState<Record<string, boolean>>({
+    productCategory: true,
     subcategory: true,
     formulation: true,
     pest: false,
@@ -212,6 +221,31 @@ function ProductsContent() {
         </div>
 
         <div className="divide-y divide-gray-100">
+
+          <FilterSection
+            title="Product Category"
+            expanded={expanded.productCategory}
+            onToggle={() => toggle('productCategory')}
+          >
+            <div className="space-y-1">
+              {CATEGORY_OPTIONS.map(opt => (
+                <button
+                  key={opt.id}
+                  onClick={() => pushFilter('category', opt.id)}
+                  className={
+                    'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ' +
+                    (category === opt.id
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-800')
+                  }
+                >
+                  <span className="text-base leading-none">{opt.emoji}</span>
+                  <span className="flex-1 text-left">{opt.label}</span>
+                  {category === opt.id && <CheckCircle2 className="w-4 h-4 opacity-80 flex-shrink-0" />}
+                </button>
+              ))}
+            </div>
+          </FilterSection>
 
           {showSubcats && (
             <FilterSection

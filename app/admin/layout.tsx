@@ -15,7 +15,7 @@ const NAV = [
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { href: '/admin/customers', label: 'Customers', icon: Users },
   { href: '/admin/leads', label: 'Leads (CRM)', icon: Users }, // Using Users icon or similar
-  { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
+  { href: '/admin', label: 'Analytics', icon: BarChart3 },
   { href: '/admin/banners', label: 'Banners', icon: Megaphone },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ]

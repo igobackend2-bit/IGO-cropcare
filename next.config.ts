@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'dummy-placeholder-project.supabase.co',
+        hostname: '*.supabase.co',
       },
     ],
   },
