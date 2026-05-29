@@ -17,6 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "IGO CropCare - Professional Agri-Tech Commerce Platform",
   description: "Verified seeds, crop protection, precision nutrition, AI-assisted crop diagnosis, and B2B procurement support for modern Indian agriculture.",
+  manifest: '/manifest.json',
   openGraph: {
     title: "IGO CropCare - Professional Agri-Tech Commerce Platform",
     description: "Verified seeds, crop protection, precision nutrition, AI-assisted crop diagnosis, and B2B procurement support for modern Indian agriculture.",

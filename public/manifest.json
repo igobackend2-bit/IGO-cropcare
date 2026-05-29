@@ -1,0 +1,52 @@
+{
+  "name": "IGO CropCare — Agri-Tech Commerce",
+  "short_name": "IGO CropCare",
+  "description": "Verified seeds, crop protection, AI-assisted crop diagnosis, and B2B procurement for modern Indian agriculture.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f766e",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-IN",
+  "categories": ["shopping", "food", "agriculture"],
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Shop Products",
+      "url": "/products",
+      "description": "Browse our full product catalog"
+    },
+    {
+      "name": "AI Crop Doctor",
+      "url": "/crop-doctor",
+      "description": "Diagnose crop diseases with AI"
+    },
+    {
+      "name": "B2B Portal",
+      "url": "/b2b",
+      "description": "Dealer and wholesale procurement"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/hero_agritech.png",
+      "type": "image/png",
+      "sizes": "1280x720",
+      "form_factor": "wide"
+    }
+  ]
+}

@@ -114,7 +114,9 @@ export default function Footer() {
           <ul className="space-y-2.5 text-sm">
             {[
               { label: 'Crop Doctor AI', href: '/crop-doctor' },
+              { label: 'Crop Calendar', href: '/crop-calendar' },
               { label: 'Market Prices', href: '/market-prices' },
+              { label: 'About Us', href: '/about' },
               { label: 'Orders', href: '/orders' },
               { label: 'Profile', href: '/profile' },
               { label: 'Contact', href: '/dealers#contact' },
