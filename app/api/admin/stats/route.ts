@@ -6,7 +6,7 @@ export async function GET() {
     // Revenue + order count
     const { data: ordersData, error: ordersErr } = await supabaseAdmin
       .from('orders')
-      .select('total_amount, user_id')
+      .select('total_amount, user_id, created_at')
 
     if (ordersErr) throw ordersErr
 
@@ -31,6 +31,24 @@ export async function GET() {
       .order('created_at', { ascending: false })
       .limit(5)
 
+    // Calculate chart data (last 7 days)
+    const chartData = []
+    const today = new Date()
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today)
+      d.setDate(d.getDate() - i)
+      const dateStr = d.toISOString().split('T')[0] // YYYY-MM-DD
+      const dayName = d.toLocaleDateString('en-US', { weekday: 'short' })
+      
+      const dayOrders = ordersData?.filter(o => o.created_at && o.created_at.startsWith(dateStr)) || []
+      const dayRevenue = dayOrders.reduce((acc, o) => acc + Number(o.total_amount), 0)
+      
+      chartData.push({
+        name: dayName,
+        revenue: dayRevenue
+      })
+    }
+
     return NextResponse.json({
       revenue: totalRevenue,
       orders: totalOrders,
@@ -38,6 +56,7 @@ export async function GET() {
       products: productsCount ?? 0,
       leads: leadsCount ?? 0,
       recentOrders: recentOrders ?? [],
+      chartData: chartData,
     })
   } catch (err) {
     console.error('GET /api/admin/stats error:', err)

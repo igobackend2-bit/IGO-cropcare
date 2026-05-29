@@ -17,16 +17,7 @@ export default function AdminDashboard() {
   const [recentOrders, setRecentOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Dummy chart data - in production this would be grouped by day/month from Supabase
-  const chartData = [
-    { name: 'Mon', revenue: 4000 },
-    { name: 'Tue', revenue: 3000 },
-    { name: 'Wed', revenue: 2000 },
-    { name: 'Thu', revenue: 2780 },
-    { name: 'Fri', revenue: 1890 },
-    { name: 'Sat', revenue: 2390 },
-    { name: 'Sun', revenue: 3490 },
-  ]
+  const [chartData, setChartData] = useState<any[]>([])
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -44,6 +35,7 @@ export default function AdminDashboard() {
             leads: data.leads ?? 0,
           })
           setRecentOrders(data.recentOrders ?? [])
+          if (data.chartData) setChartData(data.chartData)
         }
       } catch (err) {
         console.error('Admin dashboard fetch error:', err)
@@ -64,7 +56,7 @@ export default function AdminDashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <Link href="/admin/orders" className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm block transition hover:-translate-y-1 hover:shadow-md">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-slate-500 mb-1">Total Revenue</p>
@@ -76,9 +68,9 @@ export default function AdminDashboard() {
               <DollarSign className="w-6 h-6 text-primary-600 dark:text-primary-400" />
             </div>
           </div>
-        </div>
+        </Link>
 
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <Link href="/admin/orders" className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm block transition hover:-translate-y-1 hover:shadow-md">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-slate-500 mb-1">Active Orders</p>
@@ -90,9 +82,9 @@ export default function AdminDashboard() {
               <ShoppingBag className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
-        </div>
+        </Link>
 
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <Link href="/admin/customers" className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm block transition hover:-translate-y-1 hover:shadow-md">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-slate-500 mb-1">Total Customers</p>
@@ -104,9 +96,9 @@ export default function AdminDashboard() {
               <Users className="w-6 h-6 text-purple-600 dark:text-purple-400" />
             </div>
           </div>
-        </div>
+        </Link>
 
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <Link href="/admin/products" className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm block transition hover:-translate-y-1 hover:shadow-md">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-slate-500 mb-1">Total Products</p>
@@ -118,9 +110,9 @@ export default function AdminDashboard() {
               <Package className="w-6 h-6 text-amber-600 dark:text-amber-400" />
             </div>
           </div>
-        </div>
+        </Link>
 
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <Link href="/admin/leads" className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm block transition hover:-translate-y-1 hover:shadow-md">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-slate-500 mb-1">Captured Leads</p>
@@ -132,7 +124,7 @@ export default function AdminDashboard() {
               <Activity className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
             </div>
           </div>
-        </div>
+        </Link>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
