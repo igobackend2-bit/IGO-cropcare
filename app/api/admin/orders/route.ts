@@ -16,6 +16,7 @@ export async function GET() {
 
     if (error) throw error
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const orders = (data ?? []).map((o: any) => {
       const u = Array.isArray(o.users) ? o.users[0] : o.users
       return {

@@ -46,7 +46,7 @@ export default function B2BPage() {
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
             className="text-primary-100 text-lg max-w-2xl mx-auto mb-8">
-            Join India's fastest-growing agrochemical distribution network. Exclusive pricing, dedicated support, and priority stock for verified dealers.
+            Join India&apos;s fastest-growing agrochemical distribution network. Exclusive pricing, dedicated support, and priority stock for verified dealers.
           </motion.p>
           <div className="flex flex-wrap gap-6 justify-center text-sm">
             {['13,000+ Active Dealers', '28 States Coverage', '₹500 Cr+ Annual GMV'].map((s, i) => (

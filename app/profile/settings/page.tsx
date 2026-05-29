@@ -37,6 +37,7 @@ export default function SettingsPage() {
 
   const handleToggle = (key: keyof typeof settings) => {
     setSettings((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const updated = { ...prev, [key]: !prev[key] as any }
       localStorage.setItem('cc_settings', JSON.stringify(updated))
       return updated

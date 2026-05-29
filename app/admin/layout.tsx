@@ -48,6 +48,11 @@ function SidebarNav({ onClose }: { onClose?: () => void }) {
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const pathname = usePathname()
+
+  if (pathname === '/admin/login') {
+    return <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">{children}</div>
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -111,6 +116,16 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <span className="text-green-700 font-bold text-xs">A</span>
             </div>
             <span className="text-sm font-semibold text-slate-700 hidden sm:block">Admin</span>
+            <button 
+              onClick={() => {
+                document.cookie = "adminAuth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                window.location.href = '/admin/login';
+              }}
+              className="ml-2 text-slate-400 hover:text-red-500"
+              title="Logout"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
         </header>
         <main className="flex-1 p-4 md:p-8 max-w-[1400px] w-full mx-auto">

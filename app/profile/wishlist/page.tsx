@@ -50,6 +50,7 @@ export default function ProfileWishlistPage() {
 
   const handleAddToCart = (product: Product) => {
     addItem({
+      // eslint-disable-next-line react-hooks/purity
       id: `${product.id}-${Date.now()}`,
       product_id: product.id,
       quantity: 1,

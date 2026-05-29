@@ -24,6 +24,7 @@ export async function GET() {
       last_order_date: string
     }>()
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(data ?? []).forEach((order: any) => {
       const user = Array.isArray(order.users) ? order.users[0] : order.users
       if (!user?.id) return

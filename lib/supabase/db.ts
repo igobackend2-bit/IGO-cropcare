@@ -325,7 +325,9 @@ const localOrdersRaw = safeLocalStorage?.getItem('cc_orders')
 
     const products = await getProducts()
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formattedOrders: Order[] = (dbOrders as any[]).map((ord) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const items = ((ord.order_items as any[]) || []).map((item: { id: string; product_id: string; quantity: number; price: string }) => ({
         id: item.id,
         order_id: ord.id,

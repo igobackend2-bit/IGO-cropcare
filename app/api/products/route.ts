@@ -49,6 +49,7 @@ export async function GET(request: Request) {
       }
 
       // Subcategory filter
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (subCat !== 'all' && (product as any).subCategory && (product as any).subCategory !== subCat) return false
 
       if (brand !== 'all' && product.brand !== brand) return false
@@ -58,6 +59,7 @@ export async function GET(request: Request) {
       if (sellingPrice < minPrice || sellingPrice > maxPrice) return false
 
       if (formulation !== 'all' && !matchesFormulation(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         product.name, product.description, (product as any).composition, formulation
       )) {
         return false
