@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useCartStore } from '@/lib/store'
+import { useCartStore, useAuthStore } from '@/lib/store'
 import { CreditCard, MapPin, CheckCircle, ShieldCheck, ChevronRight, Package } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 
 type Step = 'address' | 'payment' | 'confirm'
@@ -17,12 +18,19 @@ const STEPS: { id: Step; label: string; icon: React.ReactNode }[] = [
 
 export default function CheckoutPage() {
   const { items, clearCart } = useCartStore()
+  const { user, isLoggedIn } = useAuthStore()
+  const router = useRouter()
   const [step, setStep] = useState<Step>('address')
   const [isProcessing, setIsProcessing] = useState(false)
   const [orderId, setOrderId] = useState('')
 
   const [address, setAddress] = useState({
-    name: '', phone: '', line1: '', city: '', state: '', pincode: ''
+    name: user ? `${user.first_name ?? ''} ${user.last_name ?? ''}`.trim() : '',
+    phone: user?.phone ?? '',
+    line1: user?.address ?? '',
+    city: user?.city ?? '',
+    state: user?.state ?? '',
+    pincode: user?.pincode ?? '',
   })
   const [paymentMethod, setPaymentMethod] = useState<'razorpay' | 'cod'>('razorpay')
 
@@ -34,14 +42,82 @@ export default function CheckoutPage() {
   const stepIndex = STEPS.findIndex(s => s.id === step)
 
   const handlePlaceOrder = async () => {
+    if (!isLoggedIn || !user) {
+      toast.error('Please login to place an order')
+      router.push('/login?redirect=/checkout')
+      return
+    }
+
     setIsProcessing(true)
-    await new Promise(r => setTimeout(r, 2000)) // Simulate API call
-    const fakeOrderId = `ORD-${Date.now().toString().slice(-6)}`
-    setOrderId(fakeOrderId)
-    clearCart()
-    setStep('confirm')
-    setIsProcessing(false)
-    toast.success('Order placed successfully!')
+
+    try {
+      const orderItems = items.map(item => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+        price: item.price,
+      }))
+
+      // Save order via server-side API route (service role -- bypasses RLS)
+      let savedOrder: { id: string } | null = null
+      try {
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, totalAmount: total, items: orderItems }),
+        })
+        if (res.ok) {
+          savedOrder = await res.json()
+        }
+      } catch (fetchErr) {
+        console.error('API order save error:', fetchErr)
+      }
+
+      // Fallback: save to localStorage if API fails
+      if (!savedOrder) {
+        const fallbackId = crypto.randomUUID()
+        const fallbackOrder = {
+          id: fallbackId,
+          user_id: user.id,
+          total_amount: total,
+          status: 'pending',
+          payment_method: paymentMethod,
+          payment_status: 'unpaid',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          items: orderItems.map(item => ({
+            id: crypto.randomUUID(),
+            order_id: fallbackId,
+            product_id: item.product_id,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          customer_name: address.name,
+          customer_email: user.email || '',
+          customer_phone: address.phone,
+        }
+        const existing = JSON.parse(localStorage.getItem('cc_orders') ?? '[]')
+        existing.push(fallbackOrder)
+        localStorage.setItem('cc_orders', JSON.stringify(existing))
+        savedOrder = fallbackOrder
+      }
+
+      if (!savedOrder) {
+        toast.error('Failed to place order. Please try again.')
+        setIsProcessing(false)
+        return
+      }
+
+      const displayId = `ORD-${savedOrder.id.slice(0, 8).toUpperCase()}`
+      setOrderId(displayId)
+      clearCart()
+      setStep('confirm')
+      toast.success('Order placed successfully!')
+    } catch (err) {
+      console.error('Order placement error:', err)
+      toast.error('Something went wrong. Please try again.')
+    } finally {
+      setIsProcessing(false)
+    }
   }
 
   if (items.length === 0 && step !== 'confirm') {
@@ -163,9 +239,9 @@ export default function CheckoutPage() {
                     <motion.button whileTap={{ scale: 0.97 }} onClick={handlePlaceOrder} disabled={isProcessing}
                       className="flex-1 bg-primary-600 text-white py-4 rounded-xl font-bold hover:bg-primary-700 transition flex items-center justify-center gap-2 shadow-sm disabled:opacity-70">
                       {isProcessing ? (
-                        <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Processing…</>
+                        <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Processing...</>
                       ) : (
-                        <>Place Order · ₹{total.toFixed(2)}</>
+                        <>Place Order . Rs.{total.toFixed(2)}</>
                       )}
                     </motion.button>
                   </div>
@@ -187,8 +263,8 @@ export default function CheckoutPage() {
                     <p className="text-xl font-bold text-primary-600">{orderId}</p>
                   </div>
                   <div className="flex gap-3 justify-center">
-                    <Link href="/orders" className="px-6 py-3 rounded-xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition">
-                      Track Order
+                    <Link href="/profile/orders" className="px-6 py-3 rounded-xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition">
+                      View Orders
                     </Link>
                     <Link href="/products" className="px-6 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                       Shop More
@@ -207,20 +283,20 @@ export default function CheckoutPage() {
                 {items.map(item => (
                   <div key={item.id} className="flex justify-between items-center text-sm">
                     <span className="text-slate-600 dark:text-slate-400 truncate flex-1">Item x{item.quantity}</span>
-                    <span className="font-medium text-slate-900 dark:text-white ml-2">₹{(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="font-medium text-slate-900 dark:text-white ml-2">Rs.{(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
               <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-2 text-sm">
-                <div className="flex justify-between text-slate-500"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
-                <div className="flex justify-between text-slate-500"><span>Shipping</span><span>{shipping === 0 ? <span className="text-primary-600 font-medium">FREE</span> : `₹${shipping}`}</span></div>
-                <div className="flex justify-between text-slate-500"><span>GST (5%)</span><span>₹{tax}</span></div>
+                <div className="flex justify-between text-slate-500"><span>Subtotal</span><span>Rs.{subtotal.toFixed(2)}</span></div>
+                <div className="flex justify-between text-slate-500"><span>Shipping</span><span>{shipping === 0 ? <span className="text-primary-600 font-medium">FREE</span> : `Rs.${shipping}`}</span></div>
+                <div className="flex justify-between text-slate-500"><span>GST (5%)</span><span>Rs.{tax}</span></div>
                 <div className="flex justify-between font-bold text-slate-900 dark:text-white text-lg border-t border-slate-100 dark:border-slate-800 pt-3 mt-2">
-                  <span>Total</span><span>₹{total.toFixed(2)}</span>
+                  <span>Total</span><span>Rs.{total.toFixed(2)}</span>
                 </div>
               </div>
               {shipping === 0 && (
-                <p className="mt-3 text-xs text-primary-600 font-medium bg-primary-50 dark:bg-primary-900/20 px-3 py-2 rounded-lg">✅ Free shipping applied on orders above ₹999</p>
+                <p className="mt-3 text-xs text-primary-600 font-medium bg-primary-50 dark:bg-primary-900/20 px-3 py-2 rounded-lg">Free shipping applied on orders above Rs.999</p>
               )}
             </div>
           )}

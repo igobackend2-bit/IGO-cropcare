@@ -12,7 +12,7 @@ const convertExtendedProduct = (ep: ExtendedProduct): Product => ({
   ...ep,
   price: ep.mrp,                  // MRP shown as strikethrough original price
   discount: ep.mrp - ep.price,    // actual rupee discount amount
-  category: ep.category as unknown,   // Cast to exact enum
+  category: ep.category as Product['category'],   // Cast to exact enum
   created_at: new Date().toISOString(),
 })
 
@@ -325,8 +325,8 @@ const localOrdersRaw = safeLocalStorage?.getItem('cc_orders')
 
     const products = await getProducts()
 
-    const formattedOrders: Order[] = dbOrders.map((ord: { id: string; order_items: unknown[] }) => {
-      const items = (ord.order_items || []).map((item: { id: string; product_id: string; quantity: number; price: string }) => ({
+    const formattedOrders: Order[] = (dbOrders as any[]).map((ord) => {
+      const items = ((ord.order_items as any[]) || []).map((item: { id: string; product_id: string; quantity: number; price: string }) => ({
         id: item.id,
         order_id: ord.id,
         product_id: item.product_id,

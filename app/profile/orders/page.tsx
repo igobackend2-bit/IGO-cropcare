@@ -1,13 +1,11 @@
 'use client'
 
-
-import Footer from '@/components/layout/Footer'
 import { useAuthStore } from '@/lib/store'
 import { Order } from '@/lib/types'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { User, MapPin, ClipboardList, LogOut, Heart, Settings, ShoppingBag, Eye, Calendar, DollarSign } from 'lucide-react'
+import { User, ClipboardList, LogOut, ShoppingBag, Calendar } from 'lucide-react'
 
 export default function MyOrdersPage() {
   const { user, isLoggedIn, logout } = useAuthStore()
@@ -26,18 +24,32 @@ export default function MyOrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       if (!user) return
+      setLoading(true)
       try {
-        setLoading(true)
-        const response = await fetch(`/api/orders/user/${user.id}`)
-        const userOrds = response.ok ? await response.json() : []
-        setOrders(Array.isArray(userOrds) ? userOrds : [])
+        // Try service-role API route first
+        const res = await fetch(`/api/orders/user/${user.id}`)
+        if (res.ok) {
+          const apiOrders = await res.json()
+          if (Array.isArray(apiOrders) && apiOrders.length > 0) {
+            setOrders(apiOrders)
+            setLoading(false)
+            return
+          }
+        }
       } catch (err) {
-        console.error(err)
+        console.error('API order fetch error:', err)
+      }
+      // Fallback: read localStorage directly
+      try {
+        const raw = localStorage.getItem('cc_orders')
+        const all: Order[] = raw ? JSON.parse(raw) : []
+        setOrders(all.filter(o => o.user_id === user.id))
+      } catch {
+        setOrders([])
       } finally {
         setLoading(false)
       }
     }
-
     fetchOrders()
   }, [user])
 
@@ -63,8 +75,6 @@ export default function MyOrdersPage() {
 
   return (
     <>
-      
-
       <div className="bg-gradient-to-r from-green-50 to-emerald-50 py-8">
         <div className="max-w-7xl mx-auto px-4">
           <h1 className="text-4xl font-bold text-gray-900">My Orders</h1>
@@ -163,7 +173,7 @@ export default function MyOrdersPage() {
 
                       {/* Order items */}
                       <div className="divide-y divide-gray-100">
-                        {order.items.map((item) => (
+                        {order.items?.map((item) => (
                           <div key={item.id} className="p-6 flex gap-4 items-center">
                             <div className="w-16 h-16 bg-gray-100 border rounded-lg overflow-hidden flex-shrink-0">
                               <img
@@ -208,8 +218,6 @@ export default function MyOrdersPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </>
   )
 }

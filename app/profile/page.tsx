@@ -1,7 +1,6 @@
 'use client'
 
 
-import Footer from '@/components/layout/Footer'
 import { useAuthStore } from '@/lib/store'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -161,7 +160,6 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <Footer />
     </>
   )
 }

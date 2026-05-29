@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ShoppingBag, Eye, Calendar, User as UserIcon } from 'lucide-react'
-import { supabase } from '@/lib/supabase/client'
+import { ShoppingBag, Eye, Calendar, User as UserIcon, RefreshCw } from 'lucide-react'
 import { Order } from '@/lib/types'
 import toast from 'react-hot-toast'
 
@@ -10,34 +9,72 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
+  const [updatingStatus, setUpdatingStatus] = useState(false)
 
   const fetchOrders = async () => {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('orders')
-      .select('*, users(first_name, last_name, email)')
-      .order('created_at', { ascending: false })
 
-    if (error) {
-      toast.error('Failed to load orders')
-      console.error(error)
-    } else {
-      // Map the joined users data to customer fields
-      const formatted = data?.map((o: any) => {
-        const user = Array.isArray(o.users) ? o.users[0] : o.users
-        return {
-          ...o,
-          customer_name: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'Guest Customer',
-          customer_email: user?.email || 'N/A'
-        }
-      })
-      setOrders(formatted as Order[])
+    // localStorage orders as fallback base
+    const localOrdersRaw = typeof window !== 'undefined' ? localStorage.getItem('cc_orders') : null
+    const localOrders: Order[] = localOrdersRaw ? JSON.parse(localOrdersRaw) : []
+
+    try {
+      // Use admin API route (service role — bypasses RLS)
+      const res = await fetch('/api/admin/orders')
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+      const dbOrders: Order[] = await res.json()
+
+      // Merge: DB orders take priority, local-only orders fill the gap
+      const dbIds = new Set(dbOrders.map((o: Order) => o.id))
+      const localOnly = localOrders.filter(o => !dbIds.has(o.id))
+      const merged = [...dbOrders, ...localOnly].sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
+      setOrders(merged)
+    } catch (err) {
+      console.error('Failed to load orders from API, using localStorage:', err)
+      const sorted = [...localOrders].sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
+      setOrders(sorted)
+      if (sorted.length > 0) toast.error('Loaded orders from local cache')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
+  }
+
+  const handleStatusUpdate = async (orderId: string, newStatus: Order['status']) => {
+    setUpdatingStatus(true)
+    try {
+      // Update via admin API route (service role — bypasses RLS)
+      const res = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: orderId, status: newStatus }),
+      })
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error ?? 'Failed')
+      }
+      // Also update localStorage cache
+      const localRaw = typeof window !== 'undefined' ? localStorage.getItem('cc_orders') : null
+      if (localRaw) {
+        const localOrders: Order[] = JSON.parse(localRaw)
+        const updated = localOrders.map(o => o.id === orderId ? { ...o, status: newStatus } : o)
+        localStorage.setItem('cc_orders', JSON.stringify(updated))
+      }
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o))
+      if (selectedOrder?.id === orderId) setSelectedOrder(prev => prev ? { ...prev, status: newStatus } : prev)
+      toast.success(`Order status updated to ${newStatus}`)
+    } catch (err) {
+      toast.error('Failed to update status')
+    } finally {
+      setUpdatingStatus(false)
+    }
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchOrders()
   }, [])
 
@@ -54,11 +91,20 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <ShoppingBag className="w-6 h-6 text-green-600" /> Order Management
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">View and manage all customer orders.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <ShoppingBag className="w-6 h-6 text-green-600" /> Order Management
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">View and manage all customer orders. Total: <strong>{orders.length}</strong></p>
+        </div>
+        <button
+          onClick={fetchOrders}
+          disabled={loading}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition disabled:opacity-50"
+        >
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
+        </button>
       </div>
 
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
@@ -140,24 +186,64 @@ export default function AdminOrdersPage() {
                 </div>
               </div>
 
-              <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-                <div className="flex justify-between items-center mb-2">
+              <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800 space-y-2">
+                <div className="flex justify-between items-center">
                   <span className="text-sm text-slate-500 flex items-center gap-2"><Calendar className="w-4 h-4" /> Date Placed</span>
-                  <span className="font-medium">{new Date(selectedOrder.created_at).toLocaleString('en-IN')}</span>
+                  <span className="font-medium text-sm">{new Date(selectedOrder.created_at).toLocaleString('en-IN')}</span>
                 </div>
+                {selectedOrder.customer_phone && selectedOrder.customer_phone !== 'N/A' && (
+                  <div className="flex justify-between items-center pt-1 border-t border-slate-200 dark:border-slate-700">
+                    <span className="text-sm text-slate-500">Phone</span>
+                    <a href={`tel:${selectedOrder.customer_phone}`} className="text-sm font-medium text-blue-600 hover:underline">
+                      {selectedOrder.customer_phone}
+                    </a>
+                  </div>
+                )}
+                {Array.isArray(selectedOrder.items) && selectedOrder.items.length > 0 && (
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
+                    <p className="text-sm font-bold text-slate-700 mb-2">Items Ordered ({selectedOrder.items.length})</p>
+                    <div className="space-y-1 max-h-36 overflow-y-auto">
+                      {selectedOrder.items.map((item, idx) => (
+                        <div key={item.id ?? idx} className="flex justify-between text-xs text-slate-600">
+                          <span className="truncate flex-1">{item.product?.name ?? `Product #${item.product_id?.slice(0,6)}`} × {item.quantity}</span>
+                          <span className="ml-2 font-semibold shrink-0">₹{(item.price * item.quantity).toLocaleString('en-IN')}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div className="flex justify-between items-center pt-2 border-t border-slate-200 dark:border-slate-700">
                   <span className="font-bold">Total Amount</span>
                   <span className="font-bold text-lg text-green-600">₹{selectedOrder.total_amount?.toLocaleString('en-IN')}</span>
                 </div>
               </div>
             </div>
-            <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 flex justify-end">
-              <button 
-                onClick={() => setSelectedOrder(null)}
-                className="px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-xl transition"
-              >
-                Close
-              </button>
+            <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Update Status</p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {(['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'] as Order['status'][]).map(s => (
+                  <button
+                    key={s}
+                    disabled={updatingStatus || selectedOrder.status === s}
+                    onClick={() => handleStatusUpdate(selectedOrder.id, s)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition border ${
+                      selectedOrder.status === s
+                        ? `${getStatusColor(s)} cursor-default opacity-80`
+                        : 'border-slate-200 bg-white hover:border-slate-400 text-slate-600'
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setSelectedOrder(null)}
+                  className="px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-xl transition"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>

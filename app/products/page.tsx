@@ -2,7 +2,6 @@
 
 import { Suspense, useEffect, useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Footer from '@/components/layout/Footer'
 import ProductCard from '@/components/products/ProductCard'
 import { Product } from '@/lib/types'
 import {
@@ -539,7 +538,6 @@ function ProductsContent() {
         </div>
       )}
 
-      <Footer />
     </>
   )
 }

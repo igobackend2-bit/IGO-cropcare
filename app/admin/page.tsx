@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ArrowUpRight, Package, Users, ShoppingBag, DollarSign, Activity } from 'lucide-react'
-import { supabase } from '@/lib/supabase/client'
+import { Package, Users, ShoppingBag, DollarSign, Activity } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import Link from 'next/link'
 
@@ -31,34 +30,25 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       setLoading(true)
-      
-      // Fetch Orders for revenue and count
-      const { data: ordersData } = await supabase.from('orders').select('total_amount')
-      const totalRevenue = ordersData?.reduce((acc, curr) => acc + Number(curr.total_amount), 0) || 0
-      
-      // Fetch Products count
-      const { count: productsCount } = await supabase.from('products').select('*', { count: 'exact', head: true })
-      
-      // Fetch Leads count
-      const { count: leadsCount } = await supabase.from('leads').select('*', { count: 'exact', head: true })
-
-      // Fetch Recent Orders with user details
-      const { data: recent } = await supabase
-        .from('orders')
-        .select('*, users(first_name, last_name)')
-        .order('created_at', { ascending: false })
-        .limit(5)
-
-      setStats({
-        revenue: totalRevenue,
-        orders: ordersData?.length || 0,
-        customers: Array.from(new Set(ordersData?.map((o: any) => o.user_id))).length || 0,
-        products: productsCount || 0,
-        leads: leadsCount || 0
-      })
-
-      setRecentOrders(recent || [])
-      setLoading(false)
+      try {
+        // Use service-role API route to bypass RLS
+        const res = await fetch('/api/admin/stats')
+        if (res.ok) {
+          const data = await res.json()
+          setStats({
+            revenue: data.revenue ?? 0,
+            orders: data.orders ?? 0,
+            customers: data.customers ?? 0,
+            products: data.products ?? 0,
+            leads: data.leads ?? 0,
+          })
+          setRecentOrders(data.recentOrders ?? [])
+        }
+      } catch (err) {
+        console.error('Admin dashboard fetch error:', err)
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchDashboardData()

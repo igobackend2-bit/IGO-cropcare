@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { supabase } from '@/lib/supabase/client'
+import { useState, useEffect } from 'react'
 import { useAuthStore } from '@/lib/store'
 import toast from 'react-hot-toast'
 import { Loader2 } from 'lucide-react'
@@ -77,33 +76,21 @@ export default function OTPAuth() {
         return
       }
 
-      // Get or create user
-      const { data: existingUser } = await supabase
-        .from('users')
-        .select('*')
-        .eq('phone', phone)
-        .single()
-
-      let user = existingUser
-
-      if (!user) {
-        const { data: newUser } = await supabase
-          .from('users')
-          .insert([
-            {
-              phone,
-              email: `${phone}@cropcare.app`,
-              first_name: '',
-              last_name: '',
-              address: '',
-              city: '',
-              state: '',
-              pincode: '',
-            },
-          ])
-          .select()
-          .single()
-        user = newUser
+      // User is returned by the server-side verify-otp route (service role — bypasses RLS)
+      // If Supabase isn't configured the server returns user: null and we build a local stub
+      const user = verifyData.user ?? {
+        id: crypto.randomUUID(),
+        phone,
+        email: `${phone}@cropcare.app`,
+        first_name: '',
+        last_name: '',
+        address: '',
+        city: '',
+        state: '',
+        pincode: '',
+        role: 'user',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       }
 
       setUser(user)

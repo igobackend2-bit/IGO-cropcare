@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server'
-import { getUserOrders } from '@/lib/supabase/db'
+import { supabaseAdmin } from '@/lib/supabase/server'
 
 export async function GET(
   _request: NextRequest,
@@ -7,9 +7,26 @@ export async function GET(
 ) {
   try {
     const { userId } = await params
-    const orders = await getUserOrders(userId)
-    return NextResponse.json(orders)
+
+    const { data: orders, error } = await supabaseAdmin
+      .from('orders')
+      .select(`
+        id, user_id, total_amount, status, payment_method, payment_status, created_at, updated_at,
+        order_items (
+          id, product_id, quantity, price
+        )
+      `)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('Supabase getUserOrders error:', error)
+      return NextResponse.json([], { status: 200 }) // Return empty array, client falls back to localStorage
+    }
+
+    return NextResponse.json(orders ?? [])
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to load orders' }, { status: 500 })
+    console.error('GET /api/orders/user error:', error)
+    return NextResponse.json([], { status: 200 })
   }
 }

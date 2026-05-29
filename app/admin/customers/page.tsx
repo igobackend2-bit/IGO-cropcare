@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { Users, Search, Download, FileText } from 'lucide-react'
-import { supabase } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
 import * as XLSX from 'xlsx'
 import jsPDF from 'jspdf'
@@ -27,47 +26,20 @@ export default function AdminCustomersPage() {
   useEffect(() => {
     const fetchCustomers = async () => {
       setLoading(true)
-      // Get all orders with user info to aggregate customer data
-      const { data, error } = await supabase
-        .from('orders')
-        .select('total_amount, created_at, user_id, users(id, first_name, last_name, email, phone)')
-        
-      if (error) {
+      try {
+        // Use admin API route (service role — bypasses RLS)
+        const res = await fetch('/api/admin/customers')
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data: CustomerStat[] = await res.json()
+        setCustomers(data)
+      } catch (err) {
+        console.error('Failed to load customers:', err)
         toast.error('Failed to load customers')
-        console.error(error)
-      } else if (data) {
-        const customerMap = new Map<string, CustomerStat>()
-        data.forEach((order: any) => {
-          const user = Array.isArray(order.users) ? order.users[0] : order.users
-          if (!user || !user.id) return
-          const uid = user.id
-          const existing = customerMap.get(uid)
-          
-          if (existing) {
-            existing.total_orders += 1
-            existing.total_spent += Number(order.total_amount)
-            if (new Date(order.created_at) > new Date(existing.last_order_date)) {
-              existing.last_order_date = order.created_at
-            }
-          } else {
-            customerMap.set(uid, {
-              id: uid,
-              first_name: user.first_name || '',
-              last_name: user.last_name || '',
-              email: user.email || '',
-              phone: user.phone || '',
-              total_orders: 1,
-              total_spent: Number(order.total_amount),
-              last_order_date: order.created_at
-            })
-          }
-        })
-        
-        setCustomers(Array.from(customerMap.values()).sort((a, b) => b.total_spent - a.total_spent))
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
-    
+
     fetchCustomers()
   }, [])
 

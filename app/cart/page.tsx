@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 
-import Footer from '@/components/layout/Footer'
 import { useCartStore, useAuthStore } from '@/lib/store'
 import { Product } from '@/lib/types'
 import Link from 'next/link'
@@ -143,7 +142,6 @@ export default function CartPage() {
             </Link>
           </div>
         </div>
-        <Footer />
       </>
     )
   }
@@ -493,7 +491,6 @@ export default function CartPage() {
         </div>
       )}
 
-      <Footer />
     </>
   )
 }

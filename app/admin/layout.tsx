@@ -5,12 +5,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Package, ShoppingBag, Users, Settings,
-  LogOut, Megaphone, BarChart3, Menu, X, Sprout
+  LogOut, Megaphone, BarChart3, Menu, X, Sprout, Warehouse
 } from 'lucide-react'
 
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/products', label: 'Products', icon: Package },
+  { href: '/admin/inventory', label: 'Inventory', icon: Warehouse },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { href: '/admin/customers', label: 'Customers', icon: Users },
   { href: '/admin/leads', label: 'Leads (CRM)', icon: Users }, // Using Users icon or similar

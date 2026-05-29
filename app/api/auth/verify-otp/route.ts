@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getOtpRecord, deleteOtp } from '../otp-store'
+import { supabaseAdmin } from '@/lib/supabase/server'
 
 export async function POST(req: Request) {
   try {
@@ -25,8 +26,46 @@ export async function POST(req: Request) {
     // OTP is valid — remove it to prevent reuse
     deleteOtp(phone)
 
-    // In production you would create/verify session and return secure token
-    return NextResponse.json({ success: true })
+    // Find or create the user using the service-role client (bypasses RLS)
+    let user = null
+    try {
+      const { data: existing } = await supabaseAdmin
+        .from('users')
+        .select('*')
+        .eq('phone', phone)
+        .single()
+
+      if (existing) {
+        user = existing
+      } else {
+        const { data: created, error: createErr } = await supabaseAdmin
+          .from('users')
+          .insert([{
+            phone,
+            email: `${phone}@cropcare.app`,
+            first_name: '',
+            last_name: '',
+            address: '',
+            city: '',
+            state: '',
+            pincode: '',
+            role: 'user',
+          }])
+          .select()
+          .single()
+
+        if (createErr) {
+          console.error('Error creating user in Supabase:', createErr)
+        } else {
+          user = created
+        }
+      }
+    } catch (dbErr) {
+      // Non-fatal: Supabase might not be configured; client will use localStorage fallback
+      console.error('Supabase user find/create error:', dbErr)
+    }
+
+    return NextResponse.json({ success: true, user })
   } catch (err) {
     console.error('verify-otp error', err)
     return NextResponse.json({ error: 'Failed to verify OTP' }, { status: 500 })

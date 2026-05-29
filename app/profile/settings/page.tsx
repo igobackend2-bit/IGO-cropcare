@@ -1,7 +1,6 @@
 'use client'
 
 
-import Footer from '@/components/layout/Footer'
 import { useAuthStore } from '@/lib/store'
 import { useState, useEffect } from 'react'
 import { redirect } from 'next/navigation'
@@ -233,7 +232,6 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <Footer />
     </>
   )
 }

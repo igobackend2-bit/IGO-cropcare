@@ -1,7 +1,6 @@
 'use client'
 
 
-import Footer from '@/components/layout/Footer'
 import { useState } from 'react'
 import { Search, BookOpen, Clock, Tag, ChevronRight, X, Heart, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
@@ -284,7 +283,6 @@ export default function KnowledgeBasePage() {
         </div>
       )}
 
-      <Footer />
     </>
   )
 }

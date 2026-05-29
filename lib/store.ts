@@ -14,11 +14,13 @@ interface AuthStore {
 
 interface CartStore {
   items: CartItem[]
+  lastAdded: CartItem | null
   addItem: (item: CartItem) => void
   removeItem: (itemId: string) => void
   updateQuantity: (itemId: string, quantity: number) => void
   clearCart: () => void
   getTotalPrice: () => number
+  clearLastAdded: () => void
 }
 
 interface WishlistStore {
@@ -48,6 +50,7 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
+      lastAdded: null,
       addItem: (item) => {
         const state = get()
         const existingItem = state.items.find((i) => i.product_id === item.product_id)
@@ -56,9 +59,10 @@ export const useCartStore = create<CartStore>()(
             items: state.items.map((i) =>
               i.product_id === item.product_id ? { ...i, quantity: i.quantity + item.quantity } : i
             ),
+            lastAdded: item,
           })
         } else {
-          set({ items: [...state.items, item] })
+          set({ items: [...state.items, item], lastAdded: item })
         }
       },
       removeItem: (itemId) => set((state) => ({ items: state.items.filter((i) => i.id !== itemId) })),
@@ -67,6 +71,7 @@ export const useCartStore = create<CartStore>()(
           items: state.items.map((i) => (i.id === itemId ? { ...i, quantity } : i)),
         })),
       clearCart: () => set({ items: [] }),
+      clearLastAdded: () => set({ lastAdded: null }),
       getTotalPrice: () => {
         const state = get()
         return state.items.reduce((total, item) => total + item.price * item.quantity, 0)

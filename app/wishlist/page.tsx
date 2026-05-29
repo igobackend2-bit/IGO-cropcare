@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Heart, ShoppingCart, Trash2, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useCartStore, useWishlistStore } from '@/lib/store'
+import { getProducts, isSupabaseConfigured } from '@/lib/supabase/db'
 import { supabase } from '@/lib/supabase/client'
 import { Product } from '@/lib/types'
 import toast from 'react-hot-toast'
@@ -25,17 +26,42 @@ export default function WishlistPage() {
       }
 
       setLoading(true)
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .in('id', wishlistIds)
+      try {
+        let products: Product[] = []
 
-      if (error) {
-        toast.error('Failed to load wishlist items')
-      } else {
-        setWishlistProducts(data as Product[])
+        if (isSupabaseConfigured()) {
+          // Try Supabase first
+          const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .in('id', wishlistIds)
+
+          if (!error && data && data.length > 0) {
+            products = data as Product[]
+          } else {
+            // Supabase configured but query failed or returned empty — use local catalog
+            const allProducts = await getProducts()
+            products = allProducts.filter(p => wishlistIds.includes(p.id))
+          }
+        } else {
+          // Supabase not configured — use local catalog
+          const allProducts = await getProducts()
+          products = allProducts.filter(p => wishlistIds.includes(p.id))
+        }
+
+        setWishlistProducts(products)
+      } catch (err) {
+        console.error('Wishlist fetch error:', err)
+        // Last resort: local catalog
+        try {
+          const allProducts = await getProducts()
+          setWishlistProducts(allProducts.filter(p => wishlistIds.includes(p.id)))
+        } catch {
+          toast.error('Failed to load wishlist items')
+        }
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
 
     fetchWishlistProducts()

@@ -1,7 +1,6 @@
 'use client'
 
 
-import Footer from '@/components/layout/Footer'
 import { useState } from 'react'
 import { MapPin, Phone, Search, Store, Navigation, Award, CheckCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -311,7 +310,6 @@ export default function DealersPage() {
         </div>
       </div>
 
-      <Footer />
     </>
   )
 }
