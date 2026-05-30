@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Award, Mail, MapPin, Phone, Shield, Sprout } from 'lucide-react';
+import { ArrowRight, Award, Mail, MapPin, Phone, Shield, Sprout, Facebook, Instagram } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -68,6 +68,17 @@ export default function Footer() {
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
               <span>Derabassi Industrial Area, Punjab - 140507, India</span>
             </div>
+          </div>
+
+          <div className="flex items-center gap-4 pt-2">
+            <a href="https://www.facebook.com/share/1CtpDtY1Er/" target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-800 text-gray-400 transition hover:bg-[#1877F2] hover:text-white">
+              <Facebook className="h-5 w-5" />
+              <span className="sr-only">Facebook</span>
+            </a>
+            <a href="https://www.instagram.com/igocropcare/?hl=en" target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-800 text-gray-400 transition hover:bg-[#E4405F] hover:text-white">
+              <Instagram className="h-5 w-5" />
+              <span className="sr-only">Instagram</span>
+            </a>
           </div>
         </div>
 
