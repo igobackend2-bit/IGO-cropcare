@@ -7,7 +7,7 @@ import {
   Bell, LogOut, Settings, Package
 } from 'lucide-react';
 import Image from 'next/image';
-import { useAuthStore, useWishlistStore } from '@/lib/store';
+import { useAuthStore, useWishlistStore, useNotificationStore } from '@/lib/store';
 import { Product } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 
@@ -48,6 +48,14 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
   
   // Search Autocomplete State
   const [searchResults, setSearchResults] = useState<Product[]>([]);
+
+  // New hooks
+  const router = useRouter();
+  const { isLoggedIn, user, logout } = useAuthStore();
+  const { items: wishlistItems } = useWishlistStore();
+  
+  // Search Autocomplete State
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const searchRef = useRef<HTMLFormElement>(null);
@@ -55,7 +63,16 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
   // UI Dropdowns
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(2);
+
+  // Notifications state
+  const { hasRead, markAsRead } = useNotificationStore();
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const unreadCount = isClient && hasRead ? 0 : 2;
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -253,13 +270,10 @@ const EnhancedHeader: FC<HeaderProps> = ({ cartCount = 0 }) => {
                   setShowNotifications(!showNotifications);
                   setShowProfileMenu(false);
                   if (!showNotifications) {
-                    setUnreadCount(0);
+                    markAsRead();
                   }
                 }}
                 className="relative flex h-10 w-10 items-center justify-center rounded-full text-gray-600 transition hover:bg-gray-100 hover:text-emerald-600"
-              >
-                <Bell size={22} />
-                {unreadCount > 0 && (
                   <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-white">
                     {unreadCount}
                   </span>

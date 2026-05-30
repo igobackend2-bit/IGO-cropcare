@@ -107,3 +107,23 @@ export const useWishlistStore = create<WishlistStore>()(
     }
   )
 )
+
+interface NotificationStore {
+  hasRead: boolean
+  markAsRead: () => void
+  resetNotifications: () => void
+}
+
+export const useNotificationStore = create<NotificationStore>()(
+  persist(
+    (set) => ({
+      hasRead: false,
+      markAsRead: () => set({ hasRead: true }),
+      resetNotifications: () => set({ hasRead: false }),
+    }),
+    {
+      name: 'cc_notifications_state',
+      version: 1,
+    }
+  )
+)
